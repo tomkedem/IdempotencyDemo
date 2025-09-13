@@ -46,6 +46,16 @@
         <div *ngFor="let p of particles" class="particle"
              [ngStyle]="{'left': p.x + '%', 'top': p.y + '%', 'animation-delay': p.delay + 'ms', 'background': p.color}"></div>
       </div>
+      <!-- Neon Progress Bar for Deletion -->
+      <div class="delete-progress-bar-container" *ngIf="showDataDeleteAnimation()">
+        <div class="delete-progress-bar-bg">
+          <div class="delete-progress-bar-fill" [style.width.%]="deleteProgress()"></div>
+        </div>
+        <div class="delete-progress-label">
+          <span>{{ deleteProgress() | number:'1.0-0' }}%</span>
+          <span class="delete-progress-text">מוחק נתוני מדדים...</span>
+        </div>
+      </div>
     </div>
   </div>
   <!-- Main Header -->

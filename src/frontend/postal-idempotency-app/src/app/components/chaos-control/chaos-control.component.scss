@@ -1,3 +1,54 @@
+// Neon Progress Bar for Data Deletion
+.delete-progress-bar-container {
+  width: 340px;
+  margin: 1.2rem auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 50;
+}
+
+.delete-progress-bar-bg {
+  width: 100%;
+  height: 18px;
+  background: rgba(10, 30, 40, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 0 16px #00ffe799, 0 0 32px #00ffe733;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #00ffe7cc;
+}
+
+.delete-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ffe7 0%, #00bcd4 100%);
+  box-shadow: 0 0 24px #00ffe7cc, 0 0 48px #00ffe799;
+  border-radius: 12px 0 0 12px;
+  transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+.delete-progress-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  margin-top: 0.5em;
+  font-family: 'Orbitron', 'Inter', monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #00ffe7;
+  text-shadow: 0 2px 12px #00ffe7cc, 0 1px 0 #fff, 0 0 8px #00ffe799;
+}
+
+.delete-progress-label .delete-progress-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #00e6ff;
+  margin-right: 0.5em;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 8px #00ffe799;
+}
 // Particle effect for data deletion
 .particle-layer {
   position: absolute;

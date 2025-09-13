@@ -62,6 +62,8 @@ interface LogEntry {
   styleUrls: ["./chaos-control.component.scss", "./grid-fix.scss"],
 })
 export class ChaosControlComponent implements AfterViewInit, OnDestroy {
+  // --- Progress for Data Deletion ---
+  deleteProgress = signal(0); // 0-100
   reloadChaosSettings() {
     this.chaosService.reloadSettings();
   }
@@ -889,7 +891,6 @@ export class ChaosControlComponent implements AfterViewInit, OnDestroy {
   }
 
   private executeCompleteCleanup() {
-
     this.addLog('warn', '🔄 מתחיל איפוס נתוני מדדים בלבד...');
     // Generate particles for the animation
     this.particles = Array.from({length: 36}, (_, i) => ({
@@ -901,8 +902,19 @@ export class ChaosControlComponent implements AfterViewInit, OnDestroy {
 
     // Show futuristic data deletion animation overlay
     this.showDataDeleteAnimation.set(true);
+    this.deleteProgress.set(0);
     const animationMinDuration = 5000; // 5 שניות לפחות
     const animationStart = Date.now();
+
+    // סימולציית התקדמות מחיקה (אם אין API אמיתי)
+    const progressInterval = setInterval(() => {
+      const current = this.deleteProgress();
+      if (current < 90) {
+        this.deleteProgress.set(current + Math.floor(Math.random() * 7) + 2); // קפיצות אקראיות
+      } else {
+        clearInterval(progressInterval);
+      }
+    }, 350);
 
     // Generate confirmation token
     this.dataCleanupService.generateConfirmationToken().subscribe({
@@ -921,20 +933,28 @@ export class ChaosControlComponent implements AfterViewInit, OnDestroy {
             const elapsed = Date.now() - animationStart;
             const remaining = Math.max(animationMinDuration - elapsed, 0);
             setTimeout(() => {
-              this.showDataDeleteAnimation.set(false);
-              this.particles = [];
+              this.deleteProgress.set(100);
+              setTimeout(() => {
+                this.showDataDeleteAnimation.set(false);
+                this.particles = [];
+                this.deleteProgress.set(0);
+              }, 800); // השהיה קצרה לסיום
             }, remaining);
             this.addLog('success', '✅ איפוס נתוני המדדים הושלם בהצלחה!');
             this.addLog('success', response.message);
             this.addLog('warn', '⚠️ רק נתוני המדדים נמחקו. שאר הנתונים לא נפגעו.');
           },
           error: (error) => {
+            clearInterval(progressInterval);
+            this.deleteProgress.set(0);
             console.error('Cleanup execution error:', error);
             this.addLog('error', `❌ שגיאה באיפוס נתוני המדדים: ${error.error?.error || error.message}`);
           }
         });
       },
       error: (error) => {
+        clearInterval(progressInterval);
+        this.deleteProgress.set(0);
         console.error('Token generation error:', error);
         this.addLog('error', '❌ שגיאה ביצירת טוקן אישור');
       }
