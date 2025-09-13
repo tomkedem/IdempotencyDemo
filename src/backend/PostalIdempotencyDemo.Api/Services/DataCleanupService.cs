@@ -129,7 +129,7 @@ namespace PostalIdempotencyDemo.Api.Services
                     // Remove the used token
                     _confirmationTokens.TryRemove(confirmationToken, out _);
 
-                    var message = $"Complete cleanup successful! Deleted {preview.IdempotencyEntriesCount} idempotency entries and {preview.OperationMetricsCount} metrics entries.";
+                    var message = $"איפוס נתונים הושלם בהצלחה! נמחקו {preview.IdempotencyEntriesCount} רשומות אידמפוטנטיות ו-{preview.OperationMetricsCount} רשומות מדדים.";
                     _logger.LogCritical("COMPLETE DATABASE CLEANUP SUCCESSFUL");
 
                     return ServiceResult<string>.Success(message);
