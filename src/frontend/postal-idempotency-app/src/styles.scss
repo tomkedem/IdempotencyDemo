@@ -1,0 +1,103 @@
+/* Angular Material theme */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global styles */
+html,
+body {
+  height: 100%;
+  direction: rtl;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+/* RTL fixes for Angular Material */
+
+// ===== תיקון דיאלוגים של Angular Material =====
+.cleanup-dialog-backdrop {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+.cleanup-dialog-panel {
+  .mat-mdc-dialog-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+
+  .mat-mdc-dialog-surface {
+    background: transparent !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+}
+
+.mat-form-field-label {
+  text-align: right;
+}
+
+.mat-button,
+.mat-raised-button {
+  font-family: inherit;
+}
+
+/* Status chip styles */
+.status-chip {
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: inline-block;
+
+  &.status-primary {
+    background: linear-gradient(45deg, #4caf50, #66bb6a) !important;
+    color: white;
+  }
+
+  &.status-accent {
+    background: linear-gradient(45deg, #ff9800, #ffb74d) !important;
+    color: white;
+  }
+
+  &.status-warn {
+    background: linear-gradient(45deg, #f44336, #ef5350) !important;
+    color: white;
+  }
+}
+
+/* Custom styles for postal idempotency demo */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  margin: 16px 0;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-success {
+  color: #4caf50;
+}
+
+.status-error {
+  color: #f44336;
+}
+
+.status-pending {
+  color: #ff9800;
+}

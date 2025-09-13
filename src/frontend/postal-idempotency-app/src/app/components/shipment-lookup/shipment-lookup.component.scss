@@ -1,0 +1,1413 @@
+.shipment-details {
+  margin-top: 0 !important;
+  max-width: none !important;
+  width: 100%;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  border-radius: 0 !important;
+  align-self: flex-start !important;
+  padding-left: 0 !important;
+  margin-top: 2rem;
+}
+
+.centered-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px auto 0 auto !important;
+  text-align: center !important;
+  width: fit-content;
+}
+.status-card .status-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px auto 0 auto !important;
+  text-align: center !important;
+  width: fit-content;
+}
+.notes-section {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 16px;
+}
+.status-card.status-delivered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.status-card.status-delivered .status-chip {
+  margin: 16px auto 0 auto !important;
+  align-self: center !important;
+  text-align: center !important;
+  display: block !important;
+}
+.status-card.status-delivered .status-chip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px auto 0 auto;
+  text-align: center;
+  width: fit-content;
+}
+.status-card.status-delivered .status-label {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 100%;
+}
+// Header styling copied from create-shipment.component.scss
+.shipment-lookup-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  padding: 2rem 3rem;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  border-radius: 32px 32px 0 0;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      linear-gradient(30deg, transparent 40%, rgba(255,255,255,0.02) 40%, rgba(255,255,255,0.02) 60%, transparent 60%),
+      linear-gradient(-30deg, transparent 40%, rgba(255,255,255,0.01) 40%, rgba(255,255,255,0.01) 60%, transparent 60%);
+    background-size: 60px 60px;
+    animation: aiPattern 20s linear infinite;
+    z-index: 1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #64748b 20%, #3b82f6 50%, #64748b 80%, transparent 100%);
+    background-size: 200% 100%;
+    animation: deliveryFlow 4s ease-in-out infinite;
+  }
+}
+
+.shipment-lookup-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  position: relative;
+  z-index: 3;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  text-align: right;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.shipment-lookup-subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.7);
+  position: relative;
+  z-index: 3;
+  line-height: 1.4;
+  text-align: right;
+  margin-top: 0.25rem;
+  letter-spacing: 0.01em;
+}
+
+@keyframes aiPattern {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+@keyframes deliveryFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+button.status-card:not(:disabled):hover .status-icon::after {
+  content: '\1F69A'; /* אייקון Unicode של משאית שליחויות */
+  position: absolute;
+  right: -28px;
+  top: 8px;
+  font-size: 1rem;
+  color: #38ef7d;
+  opacity: 0.85;
+  animation: truckMove 1.2s infinite linear;
+  pointer-events: none;
+}
+// Modern shipment lookup screen styling
+.shipment-lookup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 60vh;
+  background: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 2rem 1.5rem;
+  margin: 2rem auto;
+  max-width: none;
+}
+
+.shipment-lookup-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.shipment-lookup-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.shipment-lookup-input {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+.shipment-lookup-input:focus {
+  border-color: #38bdf8;
+  outline: none;
+}
+
+.shipment-lookup-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, #38bdf8 0%, #0ea5e9 100%);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(56,189,248,0.12);
+  transition: background 0.2s;
+}
+.shipment-lookup-btn:hover {
+  background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%);
+}
+
+.shipment-lookup-result {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  width: 100%;
+  color: #334155;
+}
+
+.shipment-lookup-error {
+  color: #ef4444;
+  background: #fee2e2;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .status-card {
+    height: 160px;
+    min-height: 140px;
+    max-height: 180px;
+  }
+}
+// Base responsive foundation - פתרון לרספונסיביות מלאה
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+// Mobile-first responsive breakpoints
+@media (max-width: 479px) {
+  body,
+  .lookup-page-centered,
+  .lookup-container,
+  .lookup-split-layout,
+  .split-right,
+  .split-left,
+  .search-form-card,
+  .shipment-details,
+  .action-buttons,
+  .status-card-group,
+  .status-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .lookup-split-layout {
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+    .status-card {
+      margin-right: 0 !important;
+      margin-bottom: 0.5rem;
+      justify-content: flex-start !important;
+      align-items: center !important;
+      height: auto !important;
+      min-height: 100px;
+      width: 100% !important;
+      max-width: 320px !important;
+      flex-direction: row !important;
+      gap: 16px !important;
+      text-align: right !important;
+      font-size: 1.15rem !important;
+    }
+    .status-label {
+      margin-bottom: 0 !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+      text-align: right !important;
+      align-self: center !important;
+      font-size: 1.15rem !important;
+    }
+  .status-card .status-icon {
+    margin-bottom: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 8px !important;
+  }
+  .status-card .status-label {
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    text-align: right !important;
+    align-self: center !important;
+  }
+  
+  .shipment-details {
+    border-radius: 12px;
+    padding: 12px 8px !important;
+    min-height: unset;
+    height: auto;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+  }
+  
+  .detail-item {
+    padding: 8px;
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    min-width: 0;
+  }
+  
+  .shipment-details mat-card-title {
+    font-size: 1.1rem !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  
+  .shipment-details mat-card-subtitle {
+    font-size: 0.9rem !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  
+  .search-form-card mat-card-header {
+    padding: 1rem 1rem !important;
+    
+    mat-card-title {
+      font-size: 1.5rem !important;
+      
+      &::before {
+        font-size: 1.2rem !important;
+      }
+    }
+    
+    mat-card-subtitle {
+      font-size: 0.85rem !important;
+    }
+  }
+  
+  .search-form-card mat-card-content {
+    padding: 1rem !important;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .lookup-split-layout {
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px;
+  }
+  
+  .status-card-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    
+    .status-card:first-child {
+      margin-right: 0 !important;
+    }
+  }
+  
+  .status-card {
+    width: 100% !important;
+    height: 120px !important;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .lookup-split-layout {
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px;
+  }
+  
+  .status-card-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    
+    .status-card:first-child {
+      margin-right: 0 !important;
+    }
+  }
+  
+  .status-card {
+    width: 100% !important;
+  }
+  
+  .details-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lookup-split-layout {
+    flex-direction: row;
+    gap: 32px;
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+// המשכת הקוד הקיים עם תיקונים קלים לרספונסיביות
+.shipment-details {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(44,83,100,0.08), 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e2e8f0;
+  padding: 32px 24px 24px 24px !important;
+  width: 100%;
+  margin: 0 auto;
+  font-family: 'Heebo', 'Segoe UI', Arial, sans-serif;
+  margin-top: 2rem;
+  
+  @media (max-width: 767px) {
+    max-width: 100%;
+    padding: 20px 16px 16px 16px !important;
+  }
+}
+
+.shipment-details mat-card-header {
+  background: none;
+  border-radius: 0;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  text-align: center;
+}
+
+.shipment-details mat-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.01em;
+}
+
+.shipment-details mat-card-subtitle {
+  font-size: 1rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+
+.shipment-details mat-card-content {
+  padding: 0 !important;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px 24px;
+  margin-bottom: 0;
+  width: 100%;
+
+  .customer-name-item { grid-area: 1 / 1 / 2 / 2; }
+  .address-item { grid-area: 1 / 2 / 2 / 4; } /* Spans 2 columns */
+  .weight-item { grid-area: 1 / 4 / 2 / 5; }
+  .price-item { grid-area: 1 / 5 / 2 / 6; }
+  .status-item { grid-area: 1 / 6 / 2 / 7; }
+
+  .creation-date-item { grid-area: 2 / 1 / 3 / 3; } /* Spans 2 columns */
+  .update-date-item { grid-area: 2 / 3 / 3 / 5; } /* Spans 2 columns */
+  .notes-item { grid-area: 2 / 5 / 3 / 7; }   /* Spans 2 columns */
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+    .customer-name-item { grid-area: 1 / 1 / 2 / 2; }
+    .address-item { grid-area: 1 / 2 / 2 / 4; } /* Spans 2 cols */
+    .weight-item { grid-area: 2 / 1 / 3 / 2; }
+    .price-item { grid-area: 2 / 2 / 3 / 3; }
+    .status-item { grid-area: 2 / 3 / 3 / 4; }
+    .creation-date-item { grid-area: 3 / 1 / 4 / 2; }
+    .update-date-item { grid-area: 3 / 2 / 4 / 4; } /* Spans 2 cols */
+    .notes-item { grid-area: 4 / 1 / 5 / 4; }   /* Spans all 3 cols */
+  }
+  @media (max-width: 767px) {
+    grid-template-columns: 1fr;
+    /* Reset all grid-area properties to stack vertically */
+    .customer-name-item,
+    .address-item,
+    .weight-item,
+    .price-item,
+    .status-item,
+    .creation-date-item,
+    .update-date-item,
+    .notes-item {
+      grid-area: auto;
+    }
+  }
+}
+.detail-item.full-width {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+}
+ 
+
+.detail-item {
+  background: rgba(255,255,255,0.92);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(44,83,100,0.04);
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  max-width: 100%;
+  word-break: break-word;
+  transition: box-shadow 0.2s;
+}
+
+.detail-item:hover {
+  box-shadow: 0 4px 16px rgba(44,83,100,0.10);
+  background: #f1f5f9;
+}
+
+.detail-item strong {
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.detail-item span {
+  font-size: 1.08rem;
+  color: #222;
+  font-weight: 500;
+}
+
+.detail-item.notes-item {
+  grid-column: 3 / 6;
+  grid-row: 2 / 3;
+  align-self: stretch;
+
+  @media (max-width: 1200px) {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  @media (max-width: 767px) {
+    grid-column: 1 / 2;
+    grid-row: auto;
+  }
+}
+
+.detail-item.status-item {
+  grid-column: 5 / 6; 
+  grid-row: 1 / 2;
+  align-self: start;
+
+  @media (max-width: 1200px) {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+  }
+
+  @media (max-width: 767px) {
+    grid-column: 1 / 2;
+    grid-row: auto; 
+  }
+}
+
+.detail-item.update-date-item {
+  grid-column: 5 / 6; 
+  grid-row: 2 / 3;
+  align-self: start;
+}
+
+.status-chip {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 800 important;
+  color: #fff;
+
+}
+
+// פיצול מסך בין חיפוש לפרטי משלוח
+.lookup-split-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  
+  @media (max-width: 1023px) {
+    flex-direction: column;
+  }
+}
+
+.split-right, .split-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.lookup-page-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  min-height: 100vh;
+  gap: 0;
+  overflow-x: hidden;
+  
+  @media (max-width: 767px) {
+    padding: 16px;
+    justify-content: flex-start;
+  }
+}
+
+.search-form-card, .shipment-details, .action-buttons {
+  max-width: none;
+  width: 100%;
+  margin: 0 auto 48px auto;
+  box-sizing: border-box;
+  
+  @media (max-width: 767px) {
+    max-width: 100%;
+    margin-bottom: 24px;
+  }
+}
+
+// פתרון להצגת כל התוכן בשני הפקדים הגדולים
+.lookup-main-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100vw;
+  min-height: 100vh;
+  align-items: start;
+  gap: 32px;
+  
+  @media (max-width: 1023px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+.lookup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.search-form-card, .shipment-details {
+  max-width: none;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  
+  @media (max-width: 767px) {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+.details-grid, .action-buttons {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+// גלילה אופקית עדינה במידת הצורך
+.search-form-card::-webkit-scrollbar, .shipment-details::-webkit-scrollbar {
+  height: 8px;
+  background: #e2e8f0;
+}
+
+.search-form-card::-webkit-scrollbar-thumb, .shipment-details::-webkit-scrollbar-thumb {
+  background: #b0b7c3;
+  border-radius: 4px;
+}
+
+// אייקון כללי
+.status-card .status-icon mat-icon {
+  font-size: 4rem !important;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.18));
+  
+  @media (max-width: 479px) {
+    font-size: 2.5rem !important;
+  }
+}
+.truck-animate {
+  display: inline-block;
+  animation: truckMoveSlow 5.5s linear infinite;
+}
+
+@keyframes truckMoveSlow {
+  0%   { transform: scaleX(0) translateX(0); }
+  50%  { transform: scaleX(-1) translateX(-80px); }
+  100% { transform: scaleX(-1) translateX(0); }
+}
+@keyframes truckMove {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(-60px); }
+  100% { transform: translateX(0); }
+}
+@keyframes truckMoveX {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(0); }
+  100% { transform: translateX(1000px); }
+}
+
+@keyframes truckMoveY {
+  0%   { transform: translateX(1000px); }
+  50%  { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+// אייקון ירוק לסטטוס נמסר
+.status-card.status-delivered .status-icon mat-icon {
+  color: #058f3af1 !important;
+  text-shadow: 0 0 8px #38ef7d88;
+}
+
+// אייקון אדום לסטטוס נכשל
+.status-card.status-failed .status-icon mat-icon {
+  color: #c31432 !important;
+  text-shadow: 0 0 8px #c3143288;
+}
+
+// אייקון זהב לסטטוס חלקי
+.status-card.status-partial .status-icon mat-icon {
+  color: #ffd200 !important;
+  text-shadow: 0 0 8px #ffd20088;
+}
+// צבעי רקע לצ'יפ סטטוס בפרטי משלוח
+// סטטוס 'נמסר'
+.status-chip.status-delivered {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+  color: #fff !important;
+  text-shadow: 0 2px 8px rgba(44,83,100,0.18);
+  font-weight: bolder !important ;
+  border: 2px solid #38ef7d;
+}
+// סטטוס 'נכשל'
+.status-chip.status-failed {
+  background: linear-gradient(135deg, #7b1f1f 0%, #c31432 60%, #ff512f 100%) !important;
+  color: #fff !important;
+  font-weight: bolder !important;
+  border: 2px solid #c31432;
+}
+// סטטוס 'חלקי'
+.status-chip.status-partial {
+  background: linear-gradient(135deg, #b99309 0%, #f7971e 60%, #ffd200 100%) !important;
+  color: #fff !important;
+  font-weight: bolder !important;
+  border: 2px solid #ffd200;
+}
+// סטטוס 'בדרך לחלוקה' (אפור מודרני)
+.status-chip.status-intransit {
+  background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%) !important;
+  color: #fff !important;
+  font-weight: bolder !important;
+  border: 2px solid #64748b;
+  text-shadow: 0 2px 8px rgba(100,116,139,0.18);
+}
+
+
+
+// עיצוב כרטיסי סטטוס מודרני
+.status-card-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 32px;
+  margin-bottom: 2rem;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.status-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 220px;
+  min-width: 160px;
+  margin: 0 auto 0.5rem auto;
+  flex: 1 1 180px;
+  /* הגובה יוגדר רק ב-media query למסך מחשב */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.status-card .status-icon {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  background: #f3f6fa;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12), 0 0 0 8px #e2e8f0;
+  margin-left: auto;
+  margin-right: auto;
+  
+  @media (max-width: 479px) {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+// אייקון כללי
+.status-card .status-icon mat-icon {
+  font-size: 2.2rem !important;
+  @media (max-width: 479px) {
+    font-size: 2.8rem !important;
+  }
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.18));
+  
+  @media (max-width: 479px) {
+    font-size: 2rem !important;
+  }
+}
+
+.status-card .status-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  
+  @media (max-width: 479px) {
+    font-size: 0.9rem;
+  }
+}
+
+.status-card.status-delivered {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(44,83,100,0.18);
+  border: 2px solid #38ef7d;
+}
+
+.status-card.status-failed {
+  background: linear-gradient(135deg, #7b1f1f 0%, #c31432 60%, #ff512f 100%);
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(195,20,50,0.18);
+  border: 2px solid #c31432;
+}
+
+.status-card.status-partial {
+  background: linear-gradient(135deg, #b99309 0%, #f7971e 60%, #ffd200 100%);
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(185,147,9,0.18);
+  border: 2px solid #ffd200;
+}
+
+.status-card.selected {
+  box-shadow: 0 0 0 4px #ffd700, 0 12px 32px rgba(0,0,0,0.18);
+  transform: scale(1.08);
+  z-index: 2;
+}
+
+.status-card:active:not(:disabled) {
+  transform: scale(1.10) rotate(-2deg);
+  box-shadow: 0 0 32px 8px #00c6ff88, 0 8px 32px rgba(0,0,0,0.22);
+  filter: brightness(1.12);
+  transition: transform 0.22s cubic-bezier(.4,0,.2,1), box-shadow 0.22s, filter 0.22s;
+}
+
+.status-card:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lookup-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding: 0.5rem 1rem 1rem 1rem;
+  margin: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  
+  @media (max-width: 767px) {
+    padding: 0.5rem;
+  }
+}
+
+
+
+.shipment-details, .action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2.5rem;
+  justify-content: flex-start;
+  width: 100%;
+}
+.responsive-width {
+  width: 700px;
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 0;
+}
+@media (max-width: 900px) {
+  .responsive-width {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+// Luxury search form matching delivery style
+.search-form-card {
+  max-width: 900px;
+  width: 100%;
+  border-radius: 28px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 50%, #ffffff 100%);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  box-shadow: 
+    0 32px 64px rgba(0, 0, 0, 0.12),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  
+  @media (max-width: 767px) {
+    border-radius: 16px;
+    max-width: 100%;
+  }
+  
+  mat-card-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    padding: 2rem 3rem;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+    border-radius: 32px 32px 0 0;
+    overflow: hidden;
+    
+    @media (max-width: 767px) {
+      padding: 1.5rem 2rem;
+      border-radius: 16px 16px 0 0;
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(30deg, transparent 40%, rgba(255, 255, 255, 0.02) 40%, rgba(255, 255, 255, 0.02) 60%, transparent 60%),
+        linear-gradient(-30deg, transparent 40%, rgba(255, 255, 255, 0.01) 40%, rgba(255, 255, 255, 0.01) 60%, transparent 60%);
+      background-size: 60px 60px;
+      animation: aiPattern 20s linear infinite;
+      z-index: 1;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #64748b 20%, #3b82f6 50%, #64748b 80%, transparent 100%);
+      background-size: 200% 100%;
+      animation: deliveryFlow 4s ease-in-out infinite;
+    }
+    
+    mat-card-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+      position: relative;
+      z-index: 3;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      text-align: center;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      
+      @media (max-width: 767px) {
+        font-size: 1.8rem;
+      }
+      
+      &::before {
+        content: '🔍';
+        margin-left: 8px;
+        font-size: 1.8rem;
+        filter: 
+          drop-shadow(0 0 6px rgba(59, 130, 246, 0.5))
+          drop-shadow(0 0 12px rgba(139, 92, 246, 0.3));
+          
+        @media (max-width: 767px) {
+          font-size: 1.4rem;
+        }
+      }
+    }
+    
+    mat-card-subtitle {
+      font-size: 1rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.7);
+      position: relative;
+      z-index: 3;
+      line-height: 1.4;
+      text-align: center;
+      margin-top: 0.25rem;
+      letter-spacing: 0.01em;
+      
+      @media (max-width: 767px) {
+        font-size: 0.9rem;
+      }
+    }
+  }
+  
+  mat-card-content {
+    padding: 2.5rem;
+    margin: 0;
+    background: #ffffff;
+    
+    @media (max-width: 767px) {
+      padding: 1.5rem;
+    }
+  }
+}
+
+.search-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+  margin-bottom: 0;
+  justify-content: center;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  .search-field {
+    flex: 1;
+    min-width: 280px;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    direction: rtl;
+    white-space: nowrap;
+    text-overflow: unset;
+    word-break: keep-all;
+    
+    @media (max-width: 767px) {
+      min-width: auto;
+    }
+    
+    &.mat-focused {
+      transform: translateY(-2px);
+      .mat-mdc-form-field-outline {
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+      }
+    }
+
+    .mat-mdc-form-field-outline {
+      border-radius: 16px;
+      border-width: 2px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &.mat-focused .mat-mdc-form-field-outline {
+      border-color: #667eea;
+      border-width: 2px;
+    }
+
+    .mat-mdc-form-field-label {
+      font-weight: 600;
+      color: #4a5568;
+      transition: color 0.3s ease;
+    }
+
+    &.mat-focused .mat-mdc-form-field-label {
+      color: #667eea;
+    }
+
+    input {
+      font-size: 1rem;
+      color: #2d3748;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      direction: rtl;
+      padding-inline: 0.75em 0.75em;
+      text-align: right;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: unset;
+      word-break: keep-all;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateX(-50%);
+    }
+
+    &.mat-focused::after {
+      width: 100%;
+    }
+
+    mat-icon[matSuffix] {
+      color: #a0aec0;
+      transition: all 0.3s ease;
+    }
+
+    &.mat-focused mat-icon[matSuffix] {
+      color: #667eea;
+      transform: scale(1.1);
+    }
+  }
+  
+  button {
+    min-width: 200px;
+    min-height: 150px;
+    width: 200px;
+    height: 150px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-transform: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.95) 50%, rgba(29, 78, 216, 0.9) 100%);
+    
+    @media (max-width: 768px) {
+      width: 100%;
+      min-width: auto;
+      height: 120px;
+      min-height: 120px;
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      padding: 1px;
+      background: linear-gradient(90deg, #60a5fa, #3b82f6, #2563eb, #1d4ed8, #60a5fa);
+      background-size: 400% 100%;
+      animation: quantumBorder 3s ease-in-out infinite;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+    }
+    
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    z-index: 2;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 
+        0 12px 28px rgba(59, 130, 246, 0.4),
+        0 0 40px rgba(59, 130, 246, 0.2);
+    }
+    
+    &:disabled {
+      opacity: 0.4;
+      transform: none !important;
+      box-shadow: none !important;
+      cursor: not-allowed;
+      
+      &::before {
+        animation: none;
+        opacity: 0.3;
+      }
+    }
+    
+    mat-icon {
+      margin-left: 0.5rem;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+      color: inherit !important;
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: -45px !important;
+  padding-top: 20px;
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  
+  button {
+    min-width: 160px;
+    height: 48px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &[color="warn"] {
+      background: linear-gradient(135deg, rgba(244, 67, 54, 0.8), rgba(239, 83, 80, 0.6)) !important;
+      color: #ffffff !important;
+      border-color: rgba(244, 67, 54, 0.4) !important;
+      box-shadow: 0 4px 16px rgba(244, 67, 54, 0.2);
+      
+      &:hover {
+        background: linear-gradient(135deg, rgba(244, 67, 54, 0.9), rgba(239, 83, 80, 0.7)) !important;
+        border-color: rgba(244, 67, 54, 0.6) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(244, 67, 54, 0.3);
+      }
+    }
+    
+    &[color="accent"] {
+      background: linear-gradient(135deg, rgba(255, 152, 0, 0.8), rgba(255, 183, 77, 0.6)) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 152, 0, 0.4) !important;
+      box-shadow: 0 4px 16px rgba(255, 152, 0, 0.2);
+      
+      &:hover {
+        background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(255, 183, 77, 0.7)) !important;
+        border-color: rgba(255, 152, 0, 0.6) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 152, 0, 0.3);
+      }
+    }
+    
+    &[color="primary"] {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.8), rgba(255, 215, 0, 0.6)) !important;
+      color: #1e293b !important;
+      border-color: rgba(212, 175, 55, 0.4) !important;
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+      
+      &:hover {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(255, 215, 0, 0.7)) !important;
+        border-color: rgba(212, 175, 55, 0.6) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+      }
+    }
+    
+    mat-icon {
+      margin-left: 8px;
+      font-size: 1.1rem;
+      color: inherit !important;
+    }
+    
+    @media (max-width: 768px) {
+      min-width: auto;
+      flex: 1;
+    }
+  }
+}
+
+// Animations
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes aiPattern {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+@keyframes deliveryFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes quantumBorder {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.shipment-details {
+  animation: slideInFromBottom 0.4s ease-out;
+}
+
+
+.truck-animate {
+  top:30px !important;
+  font-size: 90px !important;
+  width: 110px !important;
+  height: 110px !important;
+  z-index: 10px;  
+  animation: truckMoveY 5.5s linear infinite;
+}
+
+
+.truck-animateX {
+  top:30px !important;
+  font-size: 90px !important;
+  width: 110px !important;
+  height: 110px !important;
+  z-index: 10px;  
+  animation: truckMoveX 5.5s linear infinite;
+}
+
+.truck-barcode-overlay-wrapper {
+  position: absolute;
+  top: 42px;
+  right: 7px;
+  z-index: 2;
+  /* אין אנימציה ואין transform כאן */
+}
+
+.truck-barcode-overlay {
+  font-size: 0.67rem;
+  font-family: 'Consolas', 'Segoe UI', monospace, Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: #fff;
+  color: #222;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 2px solid #64748b;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+}

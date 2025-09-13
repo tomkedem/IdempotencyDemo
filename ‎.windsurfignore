@@ -1,0 +1,117 @@
+# -------------------------------
+# Windsurf Ignore File
+# מתאים לפרויקט משולב: Angular + .NET
+# -------------------------------
+
+# בקרת גרסאות / IDE
+.git/
+.gitattributes
+.gitignore
+.vscode/
+.vs/
+.idea/
+.DS_Store
+Thumbs.db
+
+# -------------------------------
+# .NET build outputs
+bin/
+obj/
+TestResults/
+*.trx
+*.user
+*.suo
+*.cache/
+*.ncrunch*
+_ReSharper*/
+*.DotSettings.user
+
+# -------------------------------
+# Angular / Node.js build outputs
+node_modules/
+dist/
+out/
+build/
+.angular/
+coverage/
+.npm/
+.yarn/
+.pnpm/
+*.tsbuildinfo
+
+# -------------------------------
+# לוגים וקבצים זמניים
+*.log
+logs/
+*.tmp
+tmp/
+.cache/
+
+# -------------------------------
+# קבצי נעילה גדולים (לא נדרשים להבנה לוגית)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# -------------------------------
+# קבצי סודות ותצורה מקומית
+.env
+.env.*
+secrets.json
+appsettings.*.secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+# -------------------------------
+# קבצי דאטה כבדים
+*.sqlite
+*.db
+*.bak
+*.mdf
+*.ldf
+dump.sql
+*.csv
+*.xlsx
+*.pdf
+*.docx
+*.pptx
+
+# -------------------------------
+# נכסים גרפיים כבדים (למעט חריגות)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
+assets/**
+public/**
+static/**
+
+# -------------------------------
+# החזרות חשובות (AI חייב לראות)
+!README.md
+!readme.md
+!docs/**
+!**/*.md
+
+# .NET ליבה
+!**/Program.cs
+!**/Startup.cs
+!**/Controllers/**
+!**/Middleware/**
+!**/Services/**
+!**/Models/**
+!**/Dtos/**
+!**/Utils/**
+!**/tests/**
+!**/.github/workflows/**
+!**/appsettings.json
+
+# Angular ליבה
+!src/app/**
+!src/environments/**
+!src/assets/i18n/**
+!**/tsconfig.json
+!angular.json
+!package.json

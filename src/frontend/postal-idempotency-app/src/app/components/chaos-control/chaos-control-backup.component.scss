@@ -1,0 +1,481 @@
+// Executive Luxury Color Palette
+$royal-navy: #1e3a8a;
+$deep-charcoal: #374151;
+$platinum-silver: #e5e7eb;
+$gold-accent: #d97706;
+$cream-white: #fefefe;
+$muted-bronze: #92400e;
+$sophisticated-gray: #6b7280;
+$dark-slate: #1f2937;
+$premium-black: #111827;
+$subtle-border: rgba(229, 231, 235, 0.2);
+$glass-elegant: rgba(255, 255, 255, 0.08);
+$shadow-depth: rgba(0, 0, 0, 0.25);
+$accent-hover: #f59e0b;
+$text-primary: #f9fafb;
+$text-secondary: #d1d5db;
+$text-muted: #9ca3af;
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  font-family: 'Times New Roman', 'Georgia', serif;
+  background: 
+    linear-gradient(135deg, $premium-black 0%, $dark-slate 50%, $deep-charcoal 100%);
+  color: $text-primary;
+  overflow: hidden;
+  direction: rtl;
+  text-align: right;
+  overflow: hidden;
+  position: relative;
+}
+
+// Cyberpunk Grid Background
+.cyber-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient($subtle-border 1px, transparent 1px),
+    linear-gradient(90deg, $subtle-border 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.3;
+  z-index: 1;
+}
+
+// Floating Particles
+.particle-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: $gold-accent;
+    border-radius: 50%;
+    box-shadow: 0 0 10px $gold-accent;
+    animation: floatParticle 12s linear infinite;
+  }
+  
+  &::before {
+    top: 10%;
+    left: 20%;
+    animation-delay: -2s;
+  }
+  
+  &::after {
+    top: 70%;
+    left: 80%;
+    animation-delay: -6s;
+  }
+}
+
+// Main Container
+.chaos-command-center {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+// Header Section - Holographic Style
+.command-header {
+  text-align: center;
+  position: relative;
+  
+  .system-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: $gold-accent;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    margin: 0;
+    position: relative;
+    text-shadow: 
+      2px 2px 4px $shadow-depth;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    
+    &::before {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      color: $gold-accent;
+      opacity: 0.7;
+      animation: glitchShift 4s ease-in-out infinite;
+      z-index: -1;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, $glass-elegant, transparent);
+      animation: scanLine 2s linear infinite;
+    }
+  }
+  
+  .system-status {
+    font-size: 1.2rem;
+    color: $text-secondary;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+    font-family: 'Georgia', serif;
+    animation: typewriter 3s steps(40) infinite;
+    
+    &::before {
+      content: '> ';
+      color: $neon-green;
+      animation: blink 1s infinite;
+    }
+  }
+}
+
+// Main Control Grid
+.control-matrix {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  grid-template-rows: 1fr 200px;
+  gap: 2rem;
+  height: calc(100vh - 200px);
+}
+
+// Left Control Panel
+.left-panel {
+  grid-row: 1 / -1;
+  background: linear-gradient(135deg, $glass 0%, rgba($neon-blue, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  border-radius: 20px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, $neon-blue, $neon-purple, $neon-pink, $neon-blue);
+    border-radius: 22px;
+    z-index: -1;
+    animation: borderRotate 4s linear infinite;
+  }
+  
+  .panel-title {
+    font-size: 1.4rem;
+    color: $gold-accent;
+    text-transform: capitalize;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-shadow: 1px 1px 2px $shadow-depth;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  
+  .control-item {
+    margin-bottom: 1.5rem;
+    padding: 1.2rem;
+    background: $glass-elegant;
+    border: 1px solid $subtle-border;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    
+    &:hover {
+      border-color: $gold-accent;
+      box-shadow: 0 4px 12px $shadow-depth;
+      transform: translateY(-2px);
+    }
+    
+    &:hover {
+      background: rgba($neon-blue, 0.1);
+      border-color: $neon-blue;
+      box-shadow: 0 0 20px rgba($neon-blue, 0.3);
+      transform: translateX(-5px);
+    }
+    
+    .control-label {
+      color: $neon-green;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    
+    .control-value {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  }
+}
+
+// Center Metrics Display
+.metrics-hologram {
+  background: linear-gradient(135deg, rgba($cyber-dark, 0.8) 0%, rgba($cyber-light, 0.6) 100%);
+  backdrop-filter: blur(30px);
+  border: 2px solid $glass-border;
+  border-radius: 25px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($neon-blue, 0.2), transparent);
+    animation: hologramSweep 3s ease-in-out infinite;
+  }
+  
+  .metrics-title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: $gold-accent;
+    text-transform: capitalize;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 3px $shadow-depth;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+}
+
+// Metrics Grid - Hexagonal Layout
+.hex-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  justify-items: center;
+  align-items: center;
+  height: 100%;
+}
+
+.hex-metric {
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, $glass-elegant 0%, rgba($gold-accent, 0.1) 100%);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid $subtle-border;
+  backdrop-filter: blur(8px);
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px $shadow-depth;
+    border-color: $gold-accent;
+  }
+  
+  &.primary {
+    background: linear-gradient(135deg, rgba($neon-blue, 0.3) 0%, rgba($neon-blue, 0.1) 100%);
+    border: 2px solid $neon-blue;
+    animation: hexPulse 2s ease-in-out infinite;
+  }
+  
+  &.success {
+    background: linear-gradient(135deg, rgba($neon-green, 0.3) 0%, rgba($neon-green, 0.1) 100%);
+    border: 2px solid $neon-green;
+    animation: hexPulse 2s ease-in-out infinite 0.5s;
+  }
+  
+  &.warning {
+    background: linear-gradient(135deg, rgba($neon-orange, 0.3) 0%, rgba($neon-orange, 0.1) 100%);
+    border: 2px solid $neon-orange;
+    animation: hexPulse 2s ease-in-out infinite 1s;
+  }
+  
+  &.info {
+    background: linear-gradient(135deg, rgba($neon-purple, 0.3) 0%, rgba($neon-purple, 0.1) 100%);
+    border: 2px solid $neon-purple;
+    animation: hexPulse 2s ease-in-out infinite 1.5s;
+  }
+  
+  &.accent {
+    background: linear-gradient(135deg, rgba($neon-pink, 0.3) 0%, rgba($neon-pink, 0.1) 100%);
+    border: 2px solid $neon-pink;
+    animation: hexPulse 2s ease-in-out infinite 2s;
+  }
+  
+  .hex-value {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 0 10px currentColor;
+    margin-bottom: 0.5rem;
+  }
+  
+  .hex-label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+}
+
+// Right Panel
+.right-panel {
+  grid-row: 1 / -1;
+  background: linear-gradient(135deg, $glass 0%, rgba($neon-purple, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid $glass-border;
+  border-radius: 20px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(-45deg, $neon-purple, $neon-pink, $neon-orange, $neon-purple);
+    border-radius: 22px;
+    z-index: -1;
+    animation: borderRotate 4s linear infinite reverse;
+  }
+  
+  .demo-steps {
+    .demo-step {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: rgba($cyber-light, 0.3);
+      border-left: 3px solid $neon-pink;
+      border-radius: 0 10px 10px 0;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: rgba($neon-pink, 0.1);
+        transform: translateX(5px);
+        box-shadow: 0 0 15px rgba($neon-pink, 0.3);
+      }
+      
+      .step-number {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background: $neon-pink;
+        color: $cyber-dark;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 30px;
+        font-weight: bold;
+        margin-left: 1rem;
+        box-shadow: 0 0 10px $neon-pink;
+      }
+      
+      .step-text {
+        color: white;
+        margin-top: 0.5rem;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+// Bottom Status Bar
+.status-terminal {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba($cyber-darker, 0.9) 0%, rgba($cyber-dark, 0.8) 100%);
+  backdrop-filter: blur(15px);
+  border: 1px solid $matrix-green;
+  border-radius: 15px;
+  padding: 1.5rem;
+  font-family: 'Courier New', monospace;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $matrix-green, transparent);
+    animation: terminalScan 2s linear infinite;
+  }
+  
+  .terminal-content {
+    color: $matrix-green;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    
+    .terminal-line {
+      margin-bottom: 0.5rem;
+      animation: terminalType 0.5s ease-out;
+      
+      &::before {
+        content: '> ';
+        color: $neon-green;
+        font-weight: bold;
+      }
+      
+      .timestamp {
+        color: $neon-blue;
+        margin-left: 1rem;
+      }
+      
+      .status-ok {
+        color: $neon-green;
+      }
+      
+      .status-warning {
+        color: $neon-orange;
+      }
+      
+      .status-error {
+        color: $warning-red;
+      }
+    }
+  }
+}
+
+// Advanced Animations
+// Elegant Animations
+@keyframes subtleFade {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes elegantGlow {
+  0%, 100% { box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1); }
+  50% { box-shadow: 0 4px 16px rgba(217, 119, 6, 0.2); }
+}

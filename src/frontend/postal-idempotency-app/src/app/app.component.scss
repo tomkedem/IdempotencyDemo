@@ -1,0 +1,663 @@
+// צבעים מותאמים אישית
+:root {
+  --primary-color: #1e3a8a;
+  --accent-color: #475569;
+  --success-color: #94a3b8;
+  --warning-color: #cbd5e1;
+  --error-color: #64748b;
+  --background-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+}
+
+// סגנון כללי
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--background-gradient);
+  min-height: 100vh;
+  direction: rtl;
+}
+
+// סגנון הכלי העליון
+mat-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: 
+    linear-gradient(180deg, 
+      rgba(8, 15, 26, 0.98) 0%, 
+      rgba(15, 23, 42, 0.96) 50%,
+      rgba(20, 28, 47, 0.94) 100%
+    ),
+    radial-gradient(ellipse at top, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
+  backdrop-filter: blur(32px) saturate(150%);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 64px rgba(0, 0, 0, 0.25),
+    0 16px 32px rgba(212, 175, 55, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  
+  // אפקט זכוכית יוקרתי
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.02) 0%,
+        transparent 30%,
+        rgba(212, 175, 55, 0.01) 70%,
+        transparent 100%
+      );
+    pointer-events: none;
+  }
+  
+  // קו זהב עדין
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: 
+      linear-gradient(90deg, 
+        transparent 0%,
+        rgba(212, 175, 55, 0.3) 20%,
+        rgba(255, 215, 0, 0.5) 50%,
+        rgba(212, 175, 55, 0.3) 80%,
+        transparent 100%
+      );
+    box-shadow: 
+      0 0 8px rgba(212, 175, 55, 0.4),
+      0 0 16px rgba(255, 215, 0, 0.2);
+    animation: luxuryGlow 4s ease-in-out infinite;
+  }
+  
+  .mat-toolbar-row {
+    padding: 0 56px;
+    height: 80px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  span {
+    font-size: 1.6rem;
+    font-weight: 600;
+    background: linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8fafc 20%,
+      #d4af37 40%,
+      #ffd700 60%,
+      #f8fafc 80%,
+      #ffffff 100%
+    );
+    background-size: 300% 300%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: luxuryShimmer 6s ease-in-out infinite;
+    letter-spacing: 0.05em;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  button {
+    margin: 0 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #e2e8f0 !important;
+    background: 
+      linear-gradient(135deg, 
+        rgba(15, 23, 42, 0.6) 0%,
+        rgba(30, 41, 59, 0.4) 100%
+      ) !important;
+    border: 1px solid rgba(212, 175, 55, 0.25) !important;
+    position: relative;
+    min-height: 44px;
+    padding: 10px 24px;
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+    
+    // אפקט זכוכית פנימי
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.1) 30%,
+          rgba(212, 175, 55, 0.15) 50%,
+          rgba(255, 255, 255, 0.1) 70%,
+          transparent 100%
+        );
+      transition: left 0.6s ease;
+    }
+    
+    // מסגרת זהב עדינה
+    &::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      bottom: -1px;
+      background: 
+        linear-gradient(45deg,
+          rgba(212, 175, 55, 0.3) 0%,
+          rgba(255, 215, 0, 0.2) 25%,
+          rgba(212, 175, 55, 0.3) 50%,
+          rgba(255, 215, 0, 0.2) 75%,
+          rgba(212, 175, 55, 0.3) 100%
+        );
+      border-radius: 9px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    &:hover {
+      color: #ffffff !important;
+      background: 
+        linear-gradient(135deg, 
+          rgba(30, 41, 59, 0.8) 0%,
+          rgba(51, 65, 85, 0.6) 100%
+        ) !important;
+      border-color: rgba(212, 175, 55, 0.5) !important;
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 4px 16px rgba(212, 175, 55, 0.15),
+        0 0 0 1px rgba(212, 175, 55, 0.3);
+      
+      &::before {
+        left: 100%;
+      }
+      
+      &::after {
+        opacity: 1;
+      }
+    }
+    
+    &:active {
+      transform: translateY(-1px);
+    }
+    
+    &.active {
+      background: 
+        linear-gradient(135deg, 
+          rgba(51, 65, 85, 0.7) 0%,
+          rgba(71, 85, 105, 0.5) 100%
+        ) !important;
+      border-color: rgba(212, 175, 55, 0.6) !important;
+      color: #ffffff !important;
+      box-shadow: 
+        0 4px 16px rgba(212, 175, 55, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      
+      &::after {
+        opacity: 1;
+      }
+    }
+    
+    mat-icon {
+      margin-left: 8px;
+      color: inherit !important;
+      font-size: 20px;
+      filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.3));
+    }
+  }
+  
+  button[mat-icon-button] {
+    background: 
+      linear-gradient(135deg, 
+        rgba(15, 23, 42, 0.7) 0%,
+        rgba(30, 41, 59, 0.5) 100%
+      ) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    // אפקט יהלום
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: 
+        radial-gradient(circle, 
+          rgba(212, 175, 55, 0.2) 0%, 
+          rgba(255, 215, 0, 0.1) 50%,
+          transparent 70%
+        );
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.4s ease;
+    }
+    
+    &:hover {
+      background: 
+        linear-gradient(135deg, 
+          rgba(30, 41, 59, 0.8) 0%,
+          rgba(51, 65, 85, 0.6) 100%
+        ) !important;
+      border-color: rgba(212, 175, 55, 0.5) !important;
+      transform: scale(1.08) rotate(2deg);
+      box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.2),
+        0 6px 12px rgba(212, 175, 55, 0.2),
+        0 0 0 2px rgba(212, 175, 55, 0.3);
+      
+      &::before {
+        width: 80px;
+        height: 80px;
+      }
+    }
+    
+    mat-icon {
+      color: #e2e8f0 !important;
+      font-size: 22px;
+      filter: 
+        drop-shadow(0 0 6px rgba(212, 175, 55, 0.4))
+        drop-shadow(0 0 12px rgba(255, 215, 0, 0.2));
+      margin: 0;
+      
+      &:hover {
+        color: #ffffff !important;
+      }
+    }
+  }
+}
+
+// תוכן ראשי
+.main-content {
+  margin-top: 66px; // רווח מהתפריט העליון
+  padding: 24px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: calc(100vh - 90px);
+}
+
+// כרטיסיות מעוצבות
+mat-card {
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  mat-card-header {
+    padding: 24px 24px 16px;
+    
+    mat-card-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+    
+    mat-card-subtitle {
+      font-size: 1rem;
+      color: #666;
+      opacity: 0.8;
+    }
+  }
+  
+  mat-card-content {
+    padding: 0 24px 24px;
+  }
+}
+
+// שדות טופס מעוצבים
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+  
+  .mat-mdc-form-field-wrapper {
+    border-radius: 8px;
+  }
+  
+  .mat-mdc-text-field-wrapper {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.95);
+    }
+  }
+  
+  &.mat-focused .mat-mdc-text-field-wrapper {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+  }
+}
+
+// כפתורים מעוצבים
+button[mat-raised-button], button[mat-button] {
+  border-radius: 25px !important;
+  font-weight: 500;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &[color="primary"] {
+    background: linear-gradient(45deg, var(--primary-color), #5c6bc0) !important;
+  }
+  
+  &[color="accent"] {
+    background: linear-gradient(45deg, var(--accent-color), #ff6ec7) !important;
+  }
+  
+  &[color="warn"] {
+    background: linear-gradient(45deg, var(--error-color), #ff7961) !important;
+  }
+  
+  mat-icon {
+    margin-left: 8px;
+  }
+}
+
+// עיצוב מיוחד לכרטיס הברכה
+.welcome-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8)) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  
+  .features-list {
+    margin-top: 24px;
+    
+    h3 {
+      color: var(--primary-color);
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      
+      li {
+        padding: 8px 0;
+        position: relative;
+        padding-right: 24px;
+        
+        &:before {
+          content: "✓";
+          position: absolute;
+          right: 0;
+          color: var(--success-color);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+// אנימציות
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.main-content > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+// אנימציות חדשות
+@keyframes hologramScan {
+  0% {
+    background-position: 0% 0%, 0% 0%;
+  }
+  100% {
+    background-position: 100% 0%, 100% 0%;
+  }
+}
+
+@keyframes energyFlow {
+  0% {
+    opacity: 0.3;
+    transform: scaleX(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scaleX(0.8);
+  }
+}
+
+@keyframes titleGlow {
+  0% {
+    opacity: 0.5;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+  }
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+  }
+}
+
+@keyframes borderGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+// אנימציות יוקרתיות
+@keyframes luxuryGlow {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 
+      0 0 8px rgba(212, 175, 55, 0.4),
+      0 0 16px rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 
+      0 0 12px rgba(212, 175, 55, 0.6),
+      0 0 24px rgba(255, 215, 0, 0.3);
+  }
+}
+
+@keyframes luxuryShimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes crownFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
+
+// עיצוב רספונסיבי
+@media (max-width: 768px) {
+  .main-content {
+    margin-top: 80px; // רווח מותאם למובייל
+    padding: 16px;
+    min-height: calc(100vh - 80px);
+  }
+  
+  mat-toolbar {
+    .mat-toolbar-row {
+      padding: 0 12px;
+      height: 60px; // גובה מופחת במובייל
+    }
+    
+    span {
+      font-size: 1.2rem; // הקטנת כותרת במובייל
+      font-weight: 600;
+    }
+    
+    button {
+      margin: 0 4px; // הקטנת מרווח בין כפתורים
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      min-width: auto;
+      
+      // הסתרת טקסט בכפתורים במסכים קטנים
+      span {
+        display: none;
+      }
+      
+      mat-icon {
+        margin-left: 0;
+        font-size: 1.1rem;
+      }
+    }
+    
+    button[mat-icon-button] {
+      width: 40px;
+      height: 40px;
+      
+      mat-icon {
+        font-size: 1.2rem;
+      }
+    }
+  }
+  
+  mat-card {
+    margin-bottom: 16px;
+    
+    mat-card-header, mat-card-content {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  mat-toolbar {
+    .mat-toolbar-row {
+      padding: 0 8px;
+      height: 56px;
+    }
+    
+    span {
+      font-size: 1rem;
+      display: none; // הסתרת כותרת במסכים קטנים מאוד
+    }
+    
+    button {
+      margin: 0 2px;
+      padding: 6px 8px;
+      min-width: 36px;
+      height: 36px;
+      border-radius: 18px;
+      
+      mat-icon {
+        font-size: 1rem;
+      }
+    }
+    
+    .spacer {
+      flex: 0; // הקטנת spacer במובייל
+    }
+  }
+  
+  .main-content {
+    margin-top: 70px;
+    padding: 12px;
+    min-height: calc(100vh - 70px);
+  }
+}
+
+// סגנון קישורים
+.nav-links {
+  display: flex;
+  gap: 8px;
+  direction: rtl;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    mat-icon {
+      margin-left: 4px;
+    }
+
+    &.active-link {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+  }
+}
+
+// סגנון מרווח
+.spacer {
+  flex: 1 1 auto;
+}

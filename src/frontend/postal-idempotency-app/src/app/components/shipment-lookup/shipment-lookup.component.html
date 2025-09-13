@@ -1,0 +1,361 @@
+@let sh = shipment(); @let del = delivery(); @let loading = isLoading();
+<!-- truck animation and barcode at the very top -->
+<div class="responsive-width"></div>
+@if (!sh) {
+<div>
+  <mat-card class="search-form-card">
+    <mat-card-header>
+      <mat-card-title>חיפוש משלוח</mat-card-title>
+      <mat-card-subtitle>הזן ברקוד לחיפוש משלוח קיים</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="lookupForm" (ngSubmit)="onLookup()">
+        <div class="search-row">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>ברקוד</mat-label>
+            <input
+              matInput
+              formControlName="barcode"
+              placeholder="הזן ברקוד לחיפוש"
+              maxlength="13"
+              autocomplete="off"
+              inputmode="text"
+            />
+            <mat-icon
+              matSuffix
+              class="search-icon"
+              [class.loading]="loading"
+              (click)="onLookup()"
+              [style.cursor]="'pointer'"
+            >
+              @if (loading) { hourglass_empty } @else { search }
+            </mat-icon>
+            @if (lookupForm.get('barcode')?.hasError('required')) {
+            <mat-error> ברקוד הוא שדה חובה </mat-error>
+            } @if (lookupForm.get('barcode')?.hasError('pattern') && (
+            lookupForm.get('barcode')?.touched ||
+            lookupForm.get('barcode')?.dirty)) {
+            <mat-error>
+              ברקוד חייב להיות בדיוק 13 תווים (אותיות או ספרות)
+            </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </form>
+      <!-- Add clear barcode button -->
+      <div class="clear-barcode-section" style="margin-top: 16px; text-align: center;">
+        <button 
+          mat-stroked-button 
+          color="warn" 
+          type="button"
+          (click)="clearStoredBarcode()"
+          style="font-size: 0.9rem;">
+          <mat-icon>delete</mat-icon>
+          נקה ברקוד שמור
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+} @else {
+<div class="w-full max-w-7xl mx-auto">
+  <div class="lookup-split-layout">
+    <div class="split-right">
+      <mat-card class="search-form-card">
+        <mat-card-header>
+          <mat-card-title>חיפוש משלוח</mat-card-title>
+          <mat-card-subtitle>הזן ברקוד לחיפוש משלוח קיים</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form [formGroup]="lookupForm" (ngSubmit)="onLookup()">
+            <div class="search-row">
+              <mat-form-field appearance="outline" class="search-field">
+                <mat-label>ברקוד</mat-label>
+                <input
+                  matInput
+                  formControlName="barcode"
+                  placeholder="הזן ברקוד לחיפוש"
+                  maxlength="13"
+                />
+                <mat-icon
+                  matSuffix
+                  class="search-icon"
+                  [class.loading]="loading"
+                  (click)="onLookup()"
+                  [style.cursor]="'pointer'"
+                >
+                  @if (loading) { hourglass_empty } @else { search }
+                </mat-icon>
+
+                @if (lookupForm.get('barcode')?.hasError('required')) {
+                <mat-error> ברקוד הוא שדה חובה </mat-error>
+                } @if (lookupForm.get('barcode')?.hasError('pattern') &&
+                (lookupForm.get('barcode')?.touched ||
+                lookupForm.get('barcode')?.dirty)) {
+                <mat-error> ברקוד חייב להיות בדיוק 13 ספרות </mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="split-left">
+      <div class="action-buttons">
+        <h4
+          style="
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+          "
+        >
+          נא לעדכן סטטוס משלוח
+        </h4>
+        <div class="status-card-group">
+          <button
+            type="button"
+            class="status-card status-delivered"
+            [class.selected]="sh?.deliveryStatus === 2"
+            (click)="sh?.barcode ? onUpdateStatus(sh!.barcode, 2) : null"
+            [disabled]="loading || sh?.deliveryStatus === 2"
+          >
+            <span class="status-icon">
+              <mat-icon style="font-size: 3.2rem">check_circle</mat-icon>
+            </span>
+            <span class="status-label">נמסר</span>
+            <span class="status-desc">הצלחה</span>
+          </button>
+          <button
+            type="button"
+            class="status-card status-failed"
+            [class.selected]="sh?.deliveryStatus === 3"
+            (click)="sh?.barcode ? onUpdateStatus(sh!.barcode, 3) : null"
+            [disabled]="loading || sh?.deliveryStatus === 3"
+          >
+            <span class="status-icon">
+              <mat-icon style="font-size: 3.2rem">cancel</mat-icon>
+            </span>
+            <span class="status-label">לא נמסר</span>
+            <span class="status-desc">כישלון בשליחה</span>
+          </button>
+          <button
+            type="button"
+            class="status-card status-partial"
+            [class.selected]="sh?.deliveryStatus === 4"
+            (click)="sh && sh?.barcode ? onUpdateStatus(sh!.barcode, 4) : null"
+            [disabled]="loading || sh?.deliveryStatus === 4"
+          >
+            <span class="status-icon">
+              <mat-icon style="font-size: 3.2rem">hourglass_bottom</mat-icon>
+            </span>
+            <span class="status-label">נמסר חלקי</span>
+            <span class="status-desc">מסירה חלקית</span>
+          </button>
+        </div>
+      </div>
+      <div
+        [ngClass]="
+          del?.statusId === 2
+            ? 'truck-animate'
+            : del?.statusId === 3
+            ? 'truck-animateX'
+            : del?.statusId === 4
+            ? 'truck-animate'
+            : ''
+        "
+      >
+        <mat-icon
+          [ngStyle]="{
+            color:
+              del?.statusId === 2
+                ? '#058f3af1'
+                : del?.statusId === 3
+                ? '#c31432'
+                : del?.statusId === 4
+                ? '#f59e42'
+                : del?.statusId === 6
+                ? '#64748b'
+                : '#64748b',
+            transform:
+              del?.statusId === 2
+                ? 'scaleX(-1)'
+                : del?.statusId === 3
+                ? 'scaleX(1)'
+                : del?.statusId === 4
+                ? 'scaleX(-1)'
+                : 'none'
+          }"
+          style="font-size: 150px; width: 150px; height: 150px; top: 100px"
+          >local_shipping</mat-icon
+        >
+        <div
+          class="truck-barcode-overlay-wrapper"
+          [ngStyle]="{
+            right:
+              del?.statusId === 2
+                ? '7px'
+                : del?.statusId === 3
+                ? '45px'
+                : del?.statusId === 4
+                ? '7px'
+                : del?.statusId === 6
+                ? '7px'
+                : '7px'
+          }"
+        >
+          <div class="truck-barcode-overlay">{{ sh?.barcode }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-card class="shipment-details mt-8">
+  <div class="shipment-details-inner">
+    <mat-card-header>
+      <mat-card-title>פרטי המסירה</mat-card-title>
+      <mat-card-subtitle>ברקוד: {{ sh?.barcode }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="details-grid">
+        <!-- Row 1 -->
+        <div class="detail-item customer-name-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #c31432;
+                margin-left: 6px;
+              "
+              >person</mat-icon
+            >
+            שם לקוח:</strong
+          >
+          <span>{{ sh?.customerName }}</span>
+        </div>
+        <div class="detail-item address-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #f59e42;
+                margin-left: 6px;
+              "
+              >home</mat-icon
+            >
+            כתובת:</strong
+          >
+          <span>{{ sh?.address }}</span>
+        </div>
+        <div class="detail-item weight-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #ffd200;
+                margin-left: 6px;
+              "
+              >scale</mat-icon
+            >
+            משקל (ק"ג):</strong
+          >
+          <span>{{ sh?.weight }}</span>
+        </div>
+        <div class="detail-item price-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #4caf50;
+                margin-left: 6px;
+              "
+              >attach_money</mat-icon
+            >
+            מחיר (₪):</strong
+          >
+          <span>{{ sh?.price }}</span>
+        </div>
+        <div class="detail-item status-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #3b82f6;
+                margin-left: 6px;
+              "
+              >local_shipping</mat-icon
+            >
+            סטטוס מסירה:</strong
+          >
+          <span
+            [ngClass]="{
+              'status-chip': true,
+              'status-delivered': del?.statusId === 2,
+              'status-failed': del?.statusId === 3,
+              'status-partial': del?.statusId === 4,
+              'status-intransit': del?.statusId === 6
+            }"
+          >
+            {{ del?.statusNameHe || 'לא ידוע' }}
+          </span>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="detail-item creation-date-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #64748b;
+                margin-left: 6px;
+              "
+              >calendar_today</mat-icon
+            >
+            נוצר בתאריך:</strong
+          >
+          <span>{{ sh?.createdAt | date : "dd/MM/yyyy HH:mm" }}</span>
+        </div>
+        <div class="detail-item update-date-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #2196f3;
+                margin-left: 6px;
+              "
+              >update</mat-icon
+            >
+            תאריך עדכון סטטוס:</strong
+          >
+          <span>{{ del?.updatedAt | date : "dd/MM/yyyy HH:mm:ss" }}</span>
+        </div>
+        <div class="detail-item notes-item">
+          <strong
+            ><mat-icon
+              style="
+                font-size: 1.3rem;
+                vertical-align: middle;
+                color: #ff9800;
+                margin-left: 6px;
+              "
+              >notes</mat-icon
+            >
+            הערות:</strong
+          >
+          <span>{{ sh?.notes }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </div>
+</mat-card>
+}

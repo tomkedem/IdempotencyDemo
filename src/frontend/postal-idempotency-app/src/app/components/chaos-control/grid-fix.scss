@@ -1,0 +1,97 @@
+/* Grid lines fix for performance chart - ensures full grid visibility */
+.performance-chart-premium {
+    .chart-container-premium {
+        .chart-background {
+            .grid-lines {
+                /* Reduce margins so grid lines are visible on all sides */
+                top: 0.5rem !important;
+                left: 0.5rem !important;
+                right: 0.5rem !important;
+                bottom: 0.5rem !important;
+
+                /* Add subtle border to make grid edges more visible */
+                border: 2px solid rgba(161, 118, 10, 0.759) !important;
+                border-radius: 4px !important;
+
+                /* Ensure grid pattern alignment */
+                background-position: 0 0, 0 0 !important;
+            }
+        }
+
+        /* Responsive Canvas - align with golden grid */
+        .responsive-chart-canvas {
+            position: absolute !important;
+            top: 0.5rem !important;
+            left: 0.5rem !important;
+            right: 0.5rem !important;
+            bottom: 0.5rem !important;
+            width: calc(100% - 1rem) !important;
+            height: calc(100% - 1rem) !important;
+            z-index: 1 !important;
+            border-radius: 4px !important;
+        }
+
+        /* Ensure canvas doesn't overflow and aligns with grid */
+        canvas {
+            position: relative !important;
+            z-index: 1 !important;
+        }
+    }
+}
+
+/* Apply the same fix to all instances of chart container */
+.chart-container-premium {
+    .chart-background {
+        .grid-lines {
+            /* Reduce margins so grid lines are visible on all sides */
+            top: 0.5rem !important;
+            left: 0.5rem !important;
+            right: 0.5rem !important;
+            bottom: 0.5rem !important;
+
+            /* Add subtle border to make grid edges more visible */
+            border: 1px solid rgba(251, 190, 36, 0.621) !important;
+            border-radius: 4px !important;
+
+            /* Ensure grid pattern alignment */
+            background-position: 0 0, 0 0 !important;
+        }
+    }
+
+    /* Responsive Canvas for all chart containers */
+    .responsive-chart-canvas {
+        position: absolute !important;
+        top: 0.5rem !important;
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+        bottom: 0.5rem !important;
+        width: calc(100% - 1rem) !important;
+        height: calc(100% - 1rem) !important;
+        z-index: 1 !important;
+        border-radius: 4px !important;
+
+        /* Ensure smooth scaling */
+        object-fit: contain !important;
+        image-rendering: -webkit-optimize-contrast !important;
+        image-rendering: crisp-edges !important;
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            top: 0.25rem !important;
+            left: 0.25rem !important;
+            right: 0.25rem !important;
+            bottom: 0.25rem !important;
+            width: calc(100% - 0.5rem) !important;
+            height: calc(100% - 0.5rem) !important;
+        }
+
+        @media (max-width: 480px) {
+            top: 0.125rem !important;
+            left: 0.125rem !important;
+            right: 0.125rem !important;
+            bottom: 0.125rem !important;
+            width: calc(100% - 0.25rem) !important;
+            height: calc(100% - 0.25rem) !important;
+        }
+    }
+}

@@ -1,0 +1,102 @@
+# -----------------------------
+# כלליים
+.DS_Store
+Thumbs.db
+*.log
+logs/
+tmp/
+.cache/
+*.tmp
+
+# -----------------------------
+# Git / IDE
+.vscode/
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# -----------------------------
+# .NET / C#
+bin/
+obj/
+TestResults/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.mdb
+*.ldf
+*.mdf
+*.ndf
+
+# NCrunch
+*.ncrunch*
+_NCrunch_*
+.*crunch*.local.xml
+
+# Rider
+.idea/
+
+# -----------------------------
+# Angular / Node.js
+node_modules/
+dist/
+build/
+out/
+.angular/
+.npm/
+.yarn/
+.pnpm/
+*.tsbuildinfo
+
+# לוק קבצים של מנהלי חבילות
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# -----------------------------
+# כיסויים / בדיקות
+coverage/
+lcov-report/
+
+# -----------------------------
+# סודות / קונפיג מקומי
+.env
+.env.*
+secrets.json
+appsettings.*.secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+# -----------------------------
+# דאטה / קבצים כבדים
+*.sqlite
+*.db
+*.bak
+dump.sql
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.docx
+*.pptx
+*.pdf
+
+# -----------------------------
+# נכסים גראפיים/מדיה (תלוי בצורך – לרוב לא שומרים בריפו)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.svg
+assets/
+public/
+static/
+
+# -----------------------------
+# Visual Studio Code workspace
+*.code-workspace

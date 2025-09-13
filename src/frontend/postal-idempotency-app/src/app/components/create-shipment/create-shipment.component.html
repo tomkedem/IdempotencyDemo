@@ -1,0 +1,153 @@
+<div class="create-shipment-container">
+  <mat-card>
+    <mat-card-header>
+      <div class="ai-dots"></div>
+      <mat-card-title>🚚 יצירת משלוח</mat-card-title>
+      <mat-card-subtitle>מלא את הפרטים לרישום מסירת משלוח במערכת</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="shipmentForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>📦 ברקוד</mat-label>
+            <input matInput formControlName="barcode" placeholder="הכנס ברקוד" maxlength="13">
+            <mat-icon matSuffix>qr_code</mat-icon>
+              <mat-error *ngIf="shipmentForm.get('barcode')?.hasError('required')">
+                ברקוד הוא שדה חובה
+              </mat-error>
+              <mat-error *ngIf="shipmentForm.get('barcode')?.hasError('pattern') && (shipmentForm.get('barcode')?.touched || shipmentForm.get('barcode')?.dirty)">
+                ברקוד חייב להיות בדיוק 13 תווים (אותיות או ספרות)
+              </mat-error>
+              <mat-error *ngIf="shipmentForm.get('barcode')?.value?.length > 13">
+                ברקוד לא יכול להכיל יותר מ-13 תווים
+              </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>👤 מזהה עובד</mat-label>
+            <input matInput formControlName="employeeId" placeholder="הכנס מזהה עובד">
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error *ngIf="shipmentForm.get('employeeId')?.hasError('required')">
+              מזהה עובד הוא שדה חובה
+            </mat-error>
+            <mat-error *ngIf="shipmentForm.get('employeeId')?.hasError('minlength')">
+              מזהה עובד חייב להכיל לפחות 2 תווים
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>🌍 קו רוחב</mat-label>
+            <input matInput formControlName="locationLat" placeholder="32.0853" type="number" step="any">
+            <mat-icon matSuffix>my_location</mat-icon>
+            <mat-error *ngIf="shipmentForm.get('locationLat')?.hasError('pattern')">
+              קו רוחב חייב להיות מספר תקין
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>🌍 קו אורך</mat-label>
+            <input matInput formControlName="locationLng" placeholder="34.7818" type="number" step="any">
+            <mat-icon matSuffix>place</mat-icon>
+            <mat-error *ngIf="shipmentForm.get('locationLng')?.hasError('pattern')">
+              קו אורך חייב להיות מספר תקין
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>🏠 שם הנמען</mat-label>
+            <input matInput formControlName="recipientName" placeholder="הכנס שם הנמען">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="shipmentForm.get('recipientName')?.hasError('minlength')">
+              שם הנמען חייב להכיל לפחות 2 תווים
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>🚚 סטטוס מסירה</mat-label>
+            <mat-select formControlName="statusId">
+              @for (status of statuses; track status.id) {
+                <mat-option [value]="status.id">{{ status.name }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matSuffix>assignment_turned_in</mat-icon>
+            @if (shipmentForm.get('statusId')?.hasError('required')) {
+              <mat-error>שדה חובה</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field notes-field">
+            <mat-label>📝 הערות</mat-label>
+            <textarea matInput formControlName="notes" placeholder="הכנס הערות נוספות" rows="3"></textarea>
+            <mat-icon matSuffix>note</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="button-row">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="!shipmentForm.valid || isLoading()">
+            <div class="particles"></div>
+            <mat-icon>local_shipping</mat-icon>
+            @if (isLoading()) {
+              רושם מסירה...
+            } @else {
+              רשום מסירה
+            }
+          </button>
+
+          <button 
+            mat-raised-button 
+            color="accent" 
+            type="button" 
+            (click)="testConnection()"
+            [disabled]="isLoading()">
+            <div class="particles"></div>
+            <mat-icon>wifi</mat-icon>
+            @if (isLoading()) {
+              בודק...
+            } @else {
+              בדוק חיבור API
+            }
+          </button>
+
+          <button 
+            mat-button 
+            type="button" 
+            (click)="onReset()"
+            [disabled]="isLoading()">
+            <div class="particles"></div>
+            <mat-icon>refresh</mat-icon>
+            איפוס
+          </button>
+        </div>
+      </form>
+
+      @if (isLoading()) {
+        <div class="loading-overlay">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">רושם מסירה...</div>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  @if (lastResponse()) {
+    <mat-card class="response-card">
+      <mat-card-header>
+        <mat-card-title>תגובת השרת</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <pre>{{ lastResponse() | json }}</pre>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

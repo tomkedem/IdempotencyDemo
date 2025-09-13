@@ -1,0 +1,444 @@
+<div class="control-screen-container" dir="rtl">
+  <!-- Data Deletion Futuristic Animation Overlay -->
+  <div *ngIf="showDataDeleteAnimation()" class="data-delete-overlay">
+    <div class="bin-animation-container">
+      <div class="bin-title">
+        <svg class="bin-svg" width="80" height="80" viewBox="0 0 80 80">
+          <defs>
+            <radialGradient id="binGlow" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="#e0f7fa" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#00bcd4" stop-opacity="0.2"/>
+            </radialGradient>
+            <linearGradient id="binBody" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#e3eafc"/>
+              <stop offset="100%" stop-color="#b0bec5"/>
+            </linearGradient>
+            <linearGradient id="binLid" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#b2ebf2"/>
+              <stop offset="100%" stop-color="#00bcd4"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="40" cy="70" rx="24" ry="7" fill="url(#binGlow)" opacity="0.7"/>
+          <rect x="20" y="30" width="40" height="32" rx="10" fill="url(#binBody)" stroke="#00bcd4" stroke-width="2.5" filter="url(#binShadow)"/>
+          <rect x="24" y="22" width="32" height="12" rx="6" fill="url(#binLid)" stroke="#00bcd4" stroke-width="2"/>
+          <rect x="36" y="18" width="8" height="8" rx="3" fill="#e0f7fa" stroke="#00bcd4" stroke-width="1.2"/>
+          <line x1="32" y1="38" x2="48" y2="54" stroke="#ff1744" stroke-width="3" stroke-linecap="round"/>
+          <line x1="48" y1="38" x2="32" y2="54" stroke="#ff1744" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="bin-title-text">מחיקת נתוני מדדים בלבד</div>
+        <div class="bin-warning">פעולה זו אינה ניתנת לשחזור!</div>
+      </div>
+      <div class="bin-rows">
+        <div class="bin-row" *ngFor="let row of [1,2,3,4,5,6,7,8,9,10]">
+          <div class="bin-cell" *ngFor="let cell of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"></div>
+        </div>
+      </div>
+      <div class="bin-effect"></div>
+      <div class="bin-success-pulse">
+        <svg width="80" height="80">
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#00ffe7" stroke-width="4" opacity="0.5"/>
+          <circle cx="40" cy="40" r="24" fill="#00ffe7" opacity="0.15"/>
+          <polyline points="30,44 38,52 52,32" fill="none" stroke="#00ffe7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <!-- Particle effect layer -->
+      <div class="particle-layer">
+        <div *ngFor="let p of particles" class="particle"
+             [ngStyle]="{'left': p.x + '%', 'top': p.y + '%', 'animation-delay': p.delay + 'ms', 'background': p.color}"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Main Header -->
+  <header class="main-header">
+    <div class="title-container">
+      <mat-icon class="header-icon">security</mat-icon>
+      <div class="title-text-container">
+        <h1>הגנת אידמפוטנטיות</h1>
+        <p class="subtitle">מניעת כפילויות קריטיות</p>
+      </div>
+    </div>
+     <!-- Critical System Health Indicator - Prominent Position -->
+  <div class="system-health-banner">
+    <div class="premium-health-indicator-prominent" [ngClass]="getSystemHealthClass()">
+      <div class="health-pulse"></div>
+      <div class="health-icon-container">
+        <mat-icon class="health-icon">{{ getSystemHealthIcon() }}</mat-icon>
+        <span class="health-metric-below">{{ metrics()?.successRate || 0 | number:'1.0-1' }}%</span>
+      </div>
+      <div class="health-details-prominent">
+        <span class="health-title">בריאות מערכת</span>
+        <span class="health-status">{{ getSystemHealthText() }}</span>
+      </div>
+      <div class="health-trend-indicator">
+        <mat-icon class="trend-icon">trending_up</mat-icon>
+        <span class="trend-text">{{ getSystemHealthTrendText() }}</span>
+      </div>
+    </div>
+  </div>
+    <div class="status-container">
+      <div
+        class="system-status-indicator"
+        [ngClass]="
+          idempotencyProtectionEnabled() ? 'status-active' : 'status-inactive'
+        "
+      >
+        <div class="status-light"></div>
+        <span>{{
+          idempotencyProtectionEnabled() ? "הגנה פעילה" : "הגנה כבויה"
+        }}</span>
+      </div>
+        
+      <!-- Compact Premium Controls Section -->
+      <div class="premium-controls-compact">
+        <!-- Main Simulation Control - Inline -->
+        <div class="control-group-inline">
+          <button 
+            mat-fab 
+            extended
+            class="premium-simulation-btn-compact"
+            (click)="startRandomSimulation()"
+            [class.simulation-running]="isSimulationRunning()"
+            [class.simulation-ready]="!isSimulationRunning()">
+            <mat-icon class="btn-icon">{{ isSimulationRunning() ? 'stop_circle' : 'play_circle' }}</mat-icon>
+            <span class="btn-text">{{ isSimulationRunning() ? 'עצור סימולציה' : 'הפעל סימולציה' }}</span>
+            <div class="btn-glow-effect"></div>
+          </button>
+          
+          <!-- Debug Button - Smaller -->
+          <button 
+            mat-mini-fab 
+            class="premium-debug-btn-compact"
+            color="accent"
+            (click)="debugBarcodeState()"
+            matTooltip="בדיקת מצב ברקוד פעיל במערכת"
+            matTooltipPosition="below">
+            <mat-icon>developer_mode</mat-icon>
+          </button>
+        
+          
+          <!-- Enhanced Time Display - Compact -->
+          <div class="premium-time-display-compact">
+            <div class="time-background"></div>
+            <mat-icon class="time-icon">schedule</mat-icon>
+            <span class="time-value">{{ currentTime() | date : "HH:mm:ss" }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+ 
+
+  <!-- Compact Progress Indicator -->
+  <div class="premium-simulation-progress-compact" *ngIf="isSimulationRunning()">
+    <div class="progress-container-compact">
+      <div class="progress-header-compact">
+        <div class="progress-info-compact">
+          <span class="progress-title-compact">סימולציה פעילה</span>
+          <span class="progress-stats-compact">{{ currentClickCount() }}/400</span>
+        </div>
+        <div class="progress-percentage-compact">{{ simulationProgress() | number:'1.0-0' }}%</div>
+        <div class="eta-display-compact">
+          <mat-icon>timer</mat-icon>
+          <span>{{ (400 - currentClickCount()) * 0.5 | number:'1.0-0' }}s</span>
+        </div>
+      </div>
+      
+      <div class="progress-bar-container-compact">
+        <mat-progress-bar 
+          mode="determinate" 
+          [value]="simulationProgress()"
+          class="premium-progress-bar-compact">
+        </mat-progress-bar>
+        <div class="progress-glow-compact" [style.width.%]="simulationProgress()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <main class="main-grid">
+    <!-- Left Column -->
+    <div class="grid-column column-left">
+      <!-- Control Panel -->
+      <div class="panel control-panel">
+        <div class="panel-header">
+          <mat-icon>toggle_on</mat-icon>
+          <h2>בקרה וניהול</h2>
+        </div>
+        <div class="panel-content">
+          <div class="control-row">
+            <label for="idempotency-toggle">הגנת אידמפוטנטיות</label>
+            <mat-slide-toggle
+              id="idempotency-toggle"
+              [checked]="idempotencyProtectionEnabled()"
+              (change)="toggleIdempotencyProtection()"
+              color="primary"
+            ></mat-slide-toggle>
+          </div>
+          <div class="control-row">
+            <label for="expiration-input">תפוגת מפתח (שעות)</label>
+            <input
+              id="expiration-input"
+              type="number"
+              [value]="expirationHours()"
+              (input)="updateExpirationHours(+$any($event.target).value)"
+              min="1"
+              max="168"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- Enhanced Real-time Performance Chart - Premium Version -->
+          <div class="performance-chart-premium">
+            <div class="chart-header-premium">
+              <div class="chart-title-container">
+                <div class="chart-icon-wrapper">
+                  <mat-icon class="chart-icon">trending_up</mat-icon>
+                  <div class="icon-glow"></div>
+                </div>
+                <div class="title-text">
+                  <h4>מגמות ביצועים - בזמן אמת</h4>
+                  <span class="subtitle"></span>
+                </div>
+              </div>
+              <div class="chart-legend-inline">
+                <div class="legend-item" matTooltip="בקשות שהושלמו בהצלחה" matTooltipPosition="above">
+                  <div class="legend-dot success">
+                    <div class="dot-pulse"></div>
+                  </div>
+                </div>
+                <div class="legend-item" matTooltip="בקשות שנחסמו על ידי מנגנון Idempotency" matTooltipPosition="above">
+                  <div class="legend-dot blocked">
+                    <div class="dot-pulse"></div>
+                  </div>
+                </div>
+                <div class="legend-item" matTooltip="שגיאות שנגרמו מכאוס אינג'יניירינג" matTooltipPosition="above">
+                  <div class="legend-dot chaos-errors">
+                    <div class="dot-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chart-container-premium">
+              <div class="chart-background">
+                <div class="grid-lines"></div>
+                <div class="glow-effect"></div>
+              </div>
+              <canvas #performanceChart class="responsive-chart-canvas"></canvas>
+            </div>
+          </div>
+      <!-- Demo Guide -->
+      <div class="panel guide-panel">
+        <div class="panel-header">
+          <mat-icon>integration_instructions</mat-icon>
+          <h2>מדריך הדגמה</h2>
+        </div>
+        <div class="panel-content">  
+          <ol class="guide-steps">
+            <li class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <strong>יצירת מפתח:</strong>
+                <span
+                  >צור מפתח דטרמיניסטי מ-<code>barcode</code>
+                  ו-<code>statusId</code>.</span
+                >
+              </div>
+            </li>
+            <li class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <strong>שליחת בקשה:</strong>
+                <span>שלח את המפתח בכותרת <code>Idempotency-Key</code>.</span>
+              </div>
+            </li>
+            <li class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <strong>קבלת תגובה:</strong>
+                <span>השרת ישמור את התוצאה וימנע כפילות.</span>
+              </div>
+            </li>
+            <li class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <strong>מעקב וניטור:</strong>
+                <span>עקוב אחר התוצאות במדדים ובלוג המערכת.</span>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>      
+    </div>
+
+    <!-- Right Column -->
+    <div class="grid-column column-right">
+      <!-- Metrics Panel -->
+      <div class="panel metrics-panel">
+        <div class="panel-header">
+          <mat-icon>insights</mat-icon>
+          <h2>מדדי הגנת אידמפוטנטיות</h2>
+          <div class="panel-actions">
+            <button
+              mat-stroked-button
+              (click)="completeResetWithDbCleanup()"
+              class="reset-complete-btn metrics-reset-btn reset-metrics-action-btn"
+              matTooltip="איפוס מדדים (מחיקת נתוני מדדים בלבד)"
+              matTooltipShowDelay="0"
+            >
+              <mat-icon color="warn" class="reset-btn-icon">insights</mat-icon>
+              <span class="reset-btn-text">איפוס מדדים</span>
+            </button>
+            <button mat-icon-button (click)="exportMetrics()" title="ייצוא דוח">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
+          <div class="update-status-panel">
+            <div class="update-indicator">
+              <div class="indicator-dot active"></div>
+              <span class="status-text">עדכון כל 3 שניות</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel-content">
+          <!-- Real-time Update Status -->
+          
+
+          <!-- Quick Stats Summary -->
+          <div class="quick-stats">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>speed</mat-icon>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">
+                  {{ metrics()?.averageExecutionTimeMs || 0 | number : "1.0-0" }}ms
+                </div>
+                <div class="stat-label">זמן תגובה ממוצע</div>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>trending_up</mat-icon>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">
+                  {{ metrics()?.successRate || 0 | number : "1.0-1" }}%
+                </div>
+                <div class="stat-label">אחוז הצלחה</div>
+              </div>
+            </div>
+            <div class="stat-item time-saved">
+              <div class="stat-icon">
+                <mat-icon>hourglass_empty</mat-icon>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">
+                  {{ getTimeSavedFormatted() }}
+                </div>
+                <div class="stat-precise" *ngIf="getTimeSavedMs() >= 1000">
+                  {{ getTimeSavedMs() | number : "1.0-0" }}ms
+                </div>
+                <div class="stat-label">זמן שנחסך</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card successful-operations">
+              <div class="metric-content">
+                <div class="metric-value">
+                  {{ metrics()?.successfulOperations || 0 | number }}
+                </div>
+                <div class="metric-label">פעולות שעודכנו</div>
+                <div class="metric-progress">
+                  <div
+                    class="progress-bar successful"
+                    [style.width.%]="getSuccessPercentage()"
+                  ></div>
+                </div>
+              </div>
+              <mat-icon class="metric-icon">check_circle</mat-icon>
+            </div>
+
+            <div class="metric-card blocked-operations">
+              <div class="metric-content">
+                <div class="metric-value">
+                  {{ metrics()?.idempotentHits || 0 | number }}
+                </div>
+                <div class="metric-label">חסימות אידמפוטנט</div>
+                <div class="metric-progress">
+                  <div
+                    class="progress-bar blocked"
+                    [style.width.%]="getBlockedPercentage()"
+                  ></div>
+                </div>
+              </div>
+              <mat-icon class="metric-icon">security</mat-icon>
+            </div>
+            <div class="metric-card total-operations">
+              <div class="metric-content">
+                <div class="metric-value">
+                  {{ metrics()?.totalOperations || 0 | number }}
+                </div>
+                <div class="metric-label">סה"כ פעולות</div>
+                <div class="metric-progress">
+                  <div class="progress-bar total"></div>
+                </div>
+              </div>
+              <mat-icon class="metric-icon">bar_chart</mat-icon>
+            </div>
+            
+
+            <!-- NEW: Chaos Disabled Errors Card -->
+            <div class="metric-card chaos-errors">
+              <div class="metric-content">
+                <div class="metric-value">
+                  {{ getChaosErrorsCount() | number }}
+                </div>
+                <div class="metric-label">שגיאות בלי הגנה</div>
+                <div class="metric-progress">
+                  <div
+                    class="progress-bar chaos-errors"
+                    [style.width.%]="getChaosErrorsPercentage()"
+                  ></div>
+                </div>
+              </div>
+              <mat-icon class="metric-icon">warning</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Panel -->
+      <div class="panel terminal-panel">
+        <div class="panel-content">
+          <div class="terminal-content">
+            <div class="terminal-header">
+              <span class="terminal-title">לוג הגנת אידמפוטנטיות</span>
+              <button
+                mat-icon-button
+                (click)="clearLogs()"
+                class="clear-logs-btn"
+                title="נקה לוג"
+              >
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </div>
+            <div class="terminal-logs">
+              @for (log of getRecentLogs(); track log.timestamp) {
+              <div class="log-entry" [class]="log.level">
+                <span class="log-timestamp">{{
+                  log.timestamp | date : "HH:mm:ss"
+                }}</span>
+                <span class="log-level">[{{ log.level.toUpperCase() }}]</span>
+                <span class="log-message">{{ log.message }}</span>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

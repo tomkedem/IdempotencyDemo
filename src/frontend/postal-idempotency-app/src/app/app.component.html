@@ -1,0 +1,30 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span class="material-icons text-brand-cyan text-3xl">hub</span>
+    <span style="margin-right: 12px"></span>
+    <span>דמו אידמפוטנטיות דואר</span>
+
+    <span class="spacer"></span>
+    <button mat-icon-button routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button mat-button routerLink="/create-shipment">
+      <mat-icon>add</mat-icon>
+      יצירת משלוח
+    </button>
+    <button mat-button routerLink="/lookup">
+      <mat-icon>search</mat-icon>
+      חיפוש משלוח
+    </button>
+    <button mat-button routerLink="/chaos-control">
+      <mat-icon>science</mat-icon>
+      בקרת כאוס
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div
+  class="main-content flex items-center justify-center min-h-screen w-screen bg-transparent"
+>
+  <router-outlet></router-outlet>
+</div>
