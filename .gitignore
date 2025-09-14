@@ -90,10 +90,10 @@ dump.sql
 *.png
 *.jpg
 *.jpeg
-*.gif
+# *.gif
 *.webp
 *.svg
-assets/
+# assets/
 public/
 static/
 

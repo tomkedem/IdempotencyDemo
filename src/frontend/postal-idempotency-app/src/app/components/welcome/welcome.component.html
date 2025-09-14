@@ -17,9 +17,9 @@
     </header>
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
+    <div class="flex flex-col lg:flex-row gap-12 items-start">
       <!-- Left Column: Textual Content -->
-      <div class="lg:col-span-3 rtl:pl-8">
+  <div class="min-w-0 rtl:pl-8" style="flex-basis:50%; flex-grow:1; flex-shrink:1;">
         <section>
           <h2
             class="text-3xl font-bold text-gray-800 border-r-4 border-blue-500 pr-4 mb-6"
@@ -89,15 +89,17 @@
 
       <!-- Right Column: Flowchart -->
       <div
-        class="lg:col-span-2 flex flex-col items-center justify-center bg-gray-50 p-6 rounded-lg border"
+        class="flex flex-col items-center justify-center bg-gray-50 p-8 rounded-lg border w-full"
+        style="flex-basis:50%; flex-grow:1; flex-shrink:1; min-width:320px;"
       >
-        <figure>
+        <figure class="w-full">
           <img
-            src="assets/images/idempotency-flow.png"
+            src="assets/images/Idempotency diagram.gif"
             alt="תרשים זרימה של אלגוריתם אידמפוטנטיות"
-            class="w-full h-auto object-contain rounded-md shadow-md border"
+            class="h-auto object-contain rounded-md shadow-md border"
+            style="width: 100%; max-width: 100%; height: auto;"
           />
-          <figcaption class="mt-4 text-center text-sm text-gray-600">
+          <figcaption class="mt-4 text-center text-base text-gray-700 font-medium">
             תרשים זרימה המתאר את תהליך הטיפול בבקשה בשרת
           </figcaption>
         </figure>
