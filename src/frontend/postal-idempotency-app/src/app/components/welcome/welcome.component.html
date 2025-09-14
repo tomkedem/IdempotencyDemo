@@ -36,55 +36,52 @@
         </section>
 
         <section class="mt-12">
-          <h2
-            class="text-3xl font-bold text-gray-800 border-r-4 border-blue-500 pr-4 mb-6"
-          >
-            איך זה עובד? אלגוריתם הטיפול בבקשה
-          </h2>
-          <p class="text-lg text-gray-700 leading-relaxed mb-6">
-            כדי להבטיח טיפול אידמפוטנטי, כל בקשה ליצירת משלוח חייבת לכלול מפתח
-            ייחודי הנקרא <code>Idempotency-Key</code>. השרת משתמש במפתח זה כדי
-            לזהות בקשות כפולות ולמנוע ביצוע חוזר של אותה פעולה. התהליך מתבצע לפי
-            השלבים הבאים:
-          </p>
-          <ul class="space-y-4 text-lg">
-            <li class="flex items-start">
-              <span class="material-icons text-green-500 mt-1 ml-3"
-                >vpn_key</span
-              >
-              <span
-                ><strong>בדיקת המפתח:</strong> השרת בודק אם כבר קיבל בקשה עם
-                מפתח זה.</span
-              >
-            </li>
-            <li class="flex items-start">
-              <span class="material-icons text-blue-500 mt-1 ml-3"
-                >sync_lock</span
-              >
-              <span
-                ><strong>נעילת המפתח:</strong> אם המפתח חדש, השרת נועל אותו כדי
-                למנוע טיפול מקבילי באותה בקשה על ידי תהליכים אחרים.</span
-              >
-            </li>
-            <li class="flex items-start">
-              <span class="material-icons text-purple-500 mt-1 ml-3"
-                >hourglass_top</span
-              >
-              <span
-                ><strong>עיבוד הבקשה:</strong> השרת מבצע את הלוגיקה העסקית
-                (יצירת המשלוח) ושומר את תוצאת הפעולה (הצלחה או כישלון) יחד עם
-                המפתח.</span
-              >
-            </li>
-            <li class="flex items-start">
-              <span class="material-icons text-red-500 mt-1 ml-3">replay</span>
-              <span
-                ><strong>טיפול בבקשות כפולות:</strong> אם המפתח כבר קיים, השרת
-                לא יבצע את הפעולה שוב, אלא יחזיר מיד את התוצאה השמורה.</span
-              >
-            </li>
-          </ul>
-        </section>
+  <h2
+    class="text-3xl font-bold text-gray-800 border-r-4 border-blue-500 pr-4 mb-6"
+  >
+    איך זה עובד? אלגוריתם הטיפול בבקשה
+  </h2>
+  <p class="text-lg text-gray-700 leading-relaxed mb-6">
+    כדי להבטיח טיפול אידמפוטנטי, כל בקשה קריטית צריכה לכלול מפתח ייחודי הנקרא <code>Idempotency-Key</code>. 
+    <strong>הקליינט</strong> מייצר את המפתח הזה על בסיס שילוב של שדות קבועים וייחודיים לבקשה (כגון מזהה לקוח, מזהה פעולה, סכום, פרטי משלוח), 
+    ושולח אותו ב־Header של הבקשה לשרת. 
+    אין לכלול ערכים משתנים כמו תאריך/שעה במפתח, כדי להבטיח שכל לחיצה על אותו כפתור תייצר בדיוק את אותו מפתח. 
+    השרת משתמש במפתח כדי לזהות בקשות כפולות ולמנוע ביצוע חוזר של אותה פעולה. 
+    התהליך מתבצע כך:
+  </p>
+  <ul class="space-y-4 text-lg">
+    <li class="flex items-start">
+      <span class="material-icons text-blue-500 mt-1 ml-3">vpn_key</span>
+      <span>
+        <strong>יצירת המפתח ושליחתו:</strong> הקליינט יוצר <code>Idempotency-Key</code> ייחודי לכל בקשה קריטית, על בסיס שדות קבועים, ושולח אותו ב־Header של הבקשה לשרת.
+      </span>
+    </li>
+    <li class="flex items-start">
+      <span class="material-icons text-green-500 mt-1 ml-3">search</span>
+      <span>
+        <strong>בדיקת קיום המפתח:</strong> השרת בודק בטבלה ייעודית במסד הנתונים האם כבר התקבלה בקשה עם אותו <code>Idempotency-Key</code>.
+      </span>
+    </li>
+    <li class="flex items-start">
+      <span class="material-icons text-purple-500 mt-1 ml-3">save</span>
+      <span>
+        <strong>שמירת המפתח והבקשה:</strong> אם המפתח לא קיים, השרת שומר אותו יחד עם נתוני הבקשה, כדי למנוע טיפול כפול בבקשות עתידיות עם אותו מפתח.
+      </span>
+    </li>
+    <li class="flex items-start">
+      <span class="material-icons text-orange-500 mt-1 ml-3">hourglass_top</span>
+      <span>
+        <strong>עיבוד הבקשה:</strong> השרת מבצע את הלוגיקה העסקית (למשל, יצירת משלוח), ושומר את תוצאת הפעולה (הצלחה או כישלון) יחד עם המפתח.
+      </span>
+    </li>
+    <li class="flex items-start">
+      <span class="material-icons text-red-500 mt-1 ml-3">replay</span>
+      <span>
+        <strong>טיפול בבקשות חוזרות:</strong> אם מתקבלת בקשה נוספת עם אותו <code>Idempotency-Key</code>, השרת לא מבצע שוב את הפעולה, אלא מחזיר מיד את התוצאה השמורה מהפעם הראשונה.
+      </span>
+    </li>
+  </ul>
+</section>
       </div>
 
       <!-- Right Column: Flowchart -->
