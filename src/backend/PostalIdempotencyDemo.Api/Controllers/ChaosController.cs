@@ -6,26 +6,25 @@ namespace PostalIdempotencyDemo.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ChaosController : ControllerBase
-{
-    private readonly IChaosService _chaosService;
-
-    public ChaosController(IChaosService chaosService)
-    {
-        _chaosService = chaosService;
-    }
-
+public class ChaosController(IChaosService chaosService) : ControllerBase
+{      
+    /// <summary>
+    /// Get current chaos settings
+    /// </summary>
     [HttpGet("settings")]
     public async Task<IActionResult> GetSettings()
     {
-        ChaosSettingsDto settings = await _chaosService.GetChaosSettingsAsync();
+        ChaosSettingsDto settings = await chaosService.GetChaosSettingsAsync();
         return Ok(settings);
     }
 
+    /// <summary>
+    /// Update chaos settings with new configuration
+    /// </summary>
     [HttpPost("settings")]
     public async Task<IActionResult> UpdateSettings([FromBody] ChaosSettingsDto settingsDto)
     {
-        bool success = await _chaosService.UpdateChaosSettingsAsync(settingsDto);
+        bool success = await chaosService.UpdateChaosSettingsAsync(settingsDto);
         if (success)
         {
             return NoContent();

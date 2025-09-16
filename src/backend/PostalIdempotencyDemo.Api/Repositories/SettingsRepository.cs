@@ -4,19 +4,12 @@ using PostalIdempotencyDemo.Api.Models;
 
 namespace PostalIdempotencyDemo.Api.Repositories;
 
-public class SettingsRepository : ISettingsRepository
+public class SettingsRepository(IDbConnectionFactory connectionFactory) : ISettingsRepository
 {
-    private readonly IDbConnectionFactory _connectionFactory;
-
-    public SettingsRepository(IDbConnectionFactory connectionFactory)
-    {
-        _connectionFactory = connectionFactory;
-    }
-
     public async Task<IEnumerable<SystemSetting>> GetSettingsAsync()
     {
         const string query = "SELECT * FROM SystemSettings";
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = connectionFactory.CreateConnection();
         return await connection.QueryAsync<SystemSetting>(query);
     }
 
@@ -33,7 +26,7 @@ public class SettingsRepository : ISettingsRepository
                 VALUES (@SettingKey, @SettingValue, GETUTCDATE());
             END";
 
-        using var connection = _connectionFactory.CreateConnection();
+        using var connection = connectionFactory.CreateConnection();
         connection.Open();
         using var transaction = connection.BeginTransaction();
 

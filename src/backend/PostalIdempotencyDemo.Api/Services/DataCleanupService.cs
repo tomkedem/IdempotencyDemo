@@ -10,25 +10,18 @@ namespace PostalIdempotencyDemo.Api.Services
     /// Service for handling complete data cleanup operations with safety measures
     /// Follows Single Responsibility and Dependency Inversion principles
     /// </summary>
-    public class DataCleanupService : IDataCleanupService
+    public class DataCleanupService(
+        IDataCleanupRepository cleanupRepository,
+        IMetricsService metricsService,
+        ILogger<DataCleanupService> logger) : IDataCleanupService
     {
-        private readonly IDataCleanupRepository _cleanupRepository;
-        private readonly IMetricsService _metricsService;
-        private readonly ILogger<DataCleanupService> _logger;
+        private readonly IDataCleanupRepository _cleanupRepository = cleanupRepository ?? throw new ArgumentNullException(nameof(cleanupRepository));
+        private readonly IMetricsService _metricsService = metricsService ?? throw new ArgumentNullException(nameof(metricsService));
+        private readonly ILogger<DataCleanupService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         // Thread-safe storage for confirmation tokens with expiration
         private static readonly ConcurrentDictionary<string, DateTime> _confirmationTokens = new();
         private const int TOKEN_EXPIRY_MINUTES = 5; // Token expires after 5 minutes
-
-        public DataCleanupService(
-            IDataCleanupRepository cleanupRepository,
-            IMetricsService metricsService,
-            ILogger<DataCleanupService> logger)
-        {
-            _cleanupRepository = cleanupRepository ?? throw new ArgumentNullException(nameof(cleanupRepository));
-            _metricsService = metricsService ?? throw new ArgumentNullException(nameof(metricsService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
 
         public string GenerateConfirmationToken()
         {

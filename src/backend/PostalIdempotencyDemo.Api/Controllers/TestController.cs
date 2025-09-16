@@ -5,34 +5,25 @@ namespace PostalIdempotencyDemo.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TestController : ControllerBase
+public class TestController(IConfiguration configuration, ILogger<TestController> logger) : ControllerBase
 {
-    private readonly IConfiguration _configuration;
-    private readonly ILogger<TestController> _logger;
-
-    public TestController(IConfiguration configuration, ILogger<TestController> logger)
-    {
-        _configuration = configuration;
-        _logger = logger;
-    }
-
     [HttpGet("connection")]
     public async Task<IActionResult> TestConnection()
     {
         try
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            _logger.LogInformation("Using connection string: {ConnectionString}", connectionString);
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            logger.LogInformation("Using connection string: {ConnectionString}", connectionString);
 
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
 
-            _logger.LogInformation("Database connection successful");
+            logger.LogInformation("Database connection successful");
             return Ok(new { message = "Database connection successful", timestamp = DateTime.Now, connectionString = connectionString?.Substring(0, Math.Min(50, connectionString.Length)) + "..." });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Database connection failed");
+            logger.LogError(ex, "Database connection failed");
             return StatusCode(500, new { error = "Database connection failed", details = ex.Message, innerException = ex.InnerException?.Message });
         }
     }
@@ -42,7 +33,7 @@ public class TestController : ControllerBase
     {
         try
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
 
@@ -71,7 +62,7 @@ public class TestController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving shipments");
+            logger.LogError(ex, "Error retrieving shipments");
             return StatusCode(500, new { error = "Failed to retrieve shipments", details = ex.Message });
         }
     }

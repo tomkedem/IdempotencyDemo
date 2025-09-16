@@ -7,27 +7,19 @@ namespace PostalIdempotencyDemo.Api.Services
 {
     using PostalIdempotencyDemo.Api.Services.Interfaces;
 
-    public class ChaosService : IChaosService
+    public class ChaosService(ISettingsRepository settingsRepository) : IChaosService
     {
-        private readonly ISettingsRepository _settingsRepository;
-
-        public ChaosService(ISettingsRepository settingsRepository)
-        {
-            _settingsRepository = settingsRepository;
-        }
-
         public async Task<ChaosSettingsDto> GetChaosSettingsAsync()
         {
-            var settings = await _settingsRepository.GetSettingsAsync();
+            var settings = await settingsRepository.GetSettingsAsync();
             var settingsDict = settings.ToDictionary(s => s.SettingKey, s => s.SettingValue);
 
             return new ChaosSettingsDto
             {
-                UseIdempotencyKey = bool.TryParse(settingsDict.GetValueOrDefault("UseIdempotencyKey"), out var use) && use,
+                UseIdempotencyKey = bool.TryParse(settingsDict.GetValueOrDefault("UseIdempotencyKey"), out bool use) && use,
               
-                IdempotencyExpirationHours = int.TryParse(settingsDict.GetValueOrDefault("IdempotencyExpirationHours"), out var hours) ? hours : 24,
-                
-             };
+                IdempotencyExpirationHours = int.TryParse(settingsDict.GetValueOrDefault("IdempotencyExpirationHours"), out int hours) ? hours : 24,
+            };
         }
 
         public async Task<bool> UpdateChaosSettingsAsync(ChaosSettingsDto settingsDto)
@@ -38,7 +30,7 @@ namespace PostalIdempotencyDemo.Api.Services
                 new() { SettingKey = "IdempotencyExpirationHours", SettingValue = settingsDto.IdempotencyExpirationHours.ToString() },                
             };
 
-            return await _settingsRepository.UpdateSettingsAsync(settings);
+            return await settingsRepository.UpdateSettingsAsync(settings);
         }       
 
     }

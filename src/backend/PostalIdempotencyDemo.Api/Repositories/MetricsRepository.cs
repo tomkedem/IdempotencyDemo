@@ -9,22 +9,13 @@ namespace PostalIdempotencyDemo.Api.Repositories
         Task<MetricsSummaryDto> GetMetricsSummaryAsync();
     }
 
-    public class MetricsRepository : IMetricsRepository
+    public class MetricsRepository(Data.ISqlExecutor sqlExecutor, ILogger<MetricsRepository> logger) : IMetricsRepository
     {
-        private readonly Data.ISqlExecutor _sqlExecutor;
-        private readonly ILogger<MetricsRepository> _logger;
-
-        public MetricsRepository(Data.ISqlExecutor sqlExecutor, ILogger<MetricsRepository> logger)
-        {
-            _sqlExecutor = sqlExecutor;
-            _logger = logger;
-        }
-
         public async Task LogMetricsAsync(string operationType, string endpoint, long executionTimeMs, bool isIdempotentHit, string? idempotencyKey, bool isError = false)
         {
             try
             {
-                await _sqlExecutor.ExecuteAsync(async connection =>
+                await sqlExecutor.ExecuteAsync(async connection =>
                 {
                     const string sql = @"
                         INSERT INTO operation_metrics (id, operation_type, endpoint, execution_time_ms, 
@@ -47,7 +38,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error logging metrics");
+                logger.LogError(ex, "Error logging metrics");
             }
         }
 
@@ -55,7 +46,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
         {
             var summary = new MetricsSummaryDto();
 
-            await _sqlExecutor.ExecuteAsync(async connection =>
+            await sqlExecutor.ExecuteAsync(async connection =>
             {
                 const string sql = @"
                     SELECT 

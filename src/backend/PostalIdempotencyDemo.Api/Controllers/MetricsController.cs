@@ -6,41 +6,34 @@ namespace PostalIdempotencyDemo.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MetricsController : ControllerBase
+public class MetricsController(IMetricsService metricsService) : ControllerBase
 {
-    private readonly IMetricsService _metricsService;
-
-    public MetricsController(IMetricsService metricsService)
-    {
-        _metricsService = metricsService;
-    }
-
     [HttpGet("summary")]
     public async Task<IActionResult> GetSummary()
     {
-        var summary = await _metricsService.GetMetricsSummaryAsync();
+        var summary = await metricsService.GetMetricsSummaryAsync();
         return Ok(summary);
     }
 
     [HttpGet("realtime")]
     public IActionResult GetRealTimeMetrics()
     {
-        var metrics = _metricsService.GetRealTimeMetrics();
+        var metrics = metricsService.GetRealTimeMetrics();
         return Ok(metrics);
     }
 
     [HttpPost("reset")]
     public IActionResult ResetMetrics()
     {
-        _metricsService.ResetMetrics();
+        metricsService.ResetMetrics();
         return Ok(new { message = "Metrics reset successfully", timestamp = DateTime.Now });
     }
 
     [HttpGet("health")]
     public async Task<IActionResult> GetSystemHealth()
     {
-        var summary = await _metricsService.GetMetricsSummaryAsync();
-        var realTimeMetrics = _metricsService.GetRealTimeMetrics();
+        var summary = await metricsService.GetMetricsSummaryAsync();
+        var realTimeMetrics = metricsService.GetRealTimeMetrics();
 
         return Ok(new
         {

@@ -4,15 +4,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace PostalIdempotencyDemo.Api.Data;
 
-public class SqlServerConnectionFactory : IDbConnectionFactory
+public class SqlServerConnectionFactory(IConfiguration configuration) : IDbConnectionFactory
 {
-    private readonly string _connectionString;
-
-    public SqlServerConnectionFactory(IConfiguration configuration)
-    {
-        _connectionString = configuration.GetConnectionString("DefaultConnection") 
+    private readonly string _connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("DefaultConnection string is not configured.");
-    }
 
     public IDbConnection CreateConnection()
     {

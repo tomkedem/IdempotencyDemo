@@ -1,14 +1,8 @@
 namespace PostalIdempotencyDemo.Api.Middleware;
 
-public class CorrelationIdMiddleware
+public class CorrelationIdMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
     private const string CorrelationIdHeaderName = "X-Correlation-ID";
-
-    public CorrelationIdMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -27,7 +21,7 @@ public class CorrelationIdMiddleware
             return Task.CompletedTask;
         });
 
-        await _next(context);
+        await next(context);
     }
 
     private static string GetOrGenerateCorrelationId(HttpContext context)

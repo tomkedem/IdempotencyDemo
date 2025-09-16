@@ -48,26 +48,56 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
+        policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
 });
 
+// Swagger XML comments configuration
+builder.Services.AddSwaggerGen(c =>
+{
+    string xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            }, new string[] { }
+        }
+});
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-app.UseMiddleware<PostalIdempotencyDemo.Api.Middleware.GlobalExceptionMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<MaintenanceModeMiddleware>();
 app.UseMiddleware<ResponseTimeMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
-
+ 
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.MapControllers();
-
+// Map HTTP endpoints to the controllers
 app.Run();

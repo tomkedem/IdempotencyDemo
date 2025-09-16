@@ -5,23 +5,14 @@ using PostalIdempotencyDemo.Api.Services.Interfaces;
 
 namespace PostalIdempotencyDemo.Api.Services;
 
-public class ShipmentService : IShipmentService
+public class ShipmentService(IShipmentRepository repository, ILogger<ShipmentService> logger) : IShipmentService
 {
-    private readonly IShipmentRepository _repository;
-    private readonly ILogger<ShipmentService> _logger;
-
-    public ShipmentService(IShipmentRepository repository, ILogger<ShipmentService> logger)
-    {
-        _repository = repository;
-        _logger = logger;
-    }
-
     public async Task<ServiceResult<Shipment>> CreateShipmentAsync(CreateShipmentRequest request, string correlationId)
     {
         try
         {
             // Check if barcode already exists
-            var existingShipment = await _repository.GetByBarcodeAsync(request.Barcode);
+            var existingShipment = await repository.GetByBarcodeAsync(request.Barcode);
 
             if (existingShipment != null)
             {
@@ -39,16 +30,16 @@ public class ShipmentService : IShipmentService
                 Status = ShipmentStatus.Created
             };
 
-            var createdShipment = await _repository.CreateAsync(shipment);
+            var createdShipment = await repository.CreateAsync(shipment);
 
-            _logger.LogInformation("Created shipment {ShipmentId} with barcode {Barcode} (CorrelationId: {CorrelationId})",
+            logger.LogInformation("Created shipment {ShipmentId} with barcode {Barcode} (CorrelationId: {CorrelationId})",
                 createdShipment.Id, createdShipment.Barcode, correlationId);
 
             return ServiceResult<Shipment>.Success(createdShipment);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating shipment with barcode {Barcode} (CorrelationId: {CorrelationId})",
+            logger.LogError(ex, "Error creating shipment with barcode {Barcode} (CorrelationId: {CorrelationId})",
                 request.Barcode, correlationId);
             return ServiceResult<Shipment>.Failure(ex.Message ?? "Unknown error occurred", "CREATE_ERROR");
         }
@@ -58,12 +49,12 @@ public class ShipmentService : IShipmentService
     {
         try
         {
-            var shipments = await _repository.GetAllAsync();
+            var shipments = await repository.GetAllAsync();
             return ServiceResult<IEnumerable<Shipment>>.Success(shipments);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving all shipments");
+            logger.LogError(ex, "Error retrieving all shipments");
             return ServiceResult<IEnumerable<Shipment>>.Failure(ex.Message ?? "Unknown error occurred", "RETRIEVAL_ERROR");
         }
     }
@@ -72,7 +63,7 @@ public class ShipmentService : IShipmentService
     {
         try
         {
-            var shipment = await _repository.GetByBarcodeAsync(barcode);
+            var shipment = await repository.GetByBarcodeAsync(barcode);
 
             if (shipment == null)
             {
@@ -83,7 +74,7 @@ public class ShipmentService : IShipmentService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving shipment with barcode {Barcode}", barcode);
+            logger.LogError(ex, "Error retrieving shipment with barcode {Barcode}", barcode);
             return ServiceResult<Shipment>.Failure(ex.Message ?? "Unknown error occurred", "RETRIEVAL_ERROR");
         }
     }
@@ -123,16 +114,16 @@ public class ShipmentService : IShipmentService
                 shipment.Notes = notes;
             }
 
-            await _repository.UpdateAsync(shipment);
+            await repository.UpdateAsync(shipment);
 
-            _logger.LogInformation("Updated shipment {ShipmentId} status from {OldStatus} to {NewStatus}",
+            logger.LogInformation("Updated shipment {ShipmentId} status from {OldStatus} to {NewStatus}",
                 shipment.Id, shipment.Status, status);
 
             return ServiceResult<Shipment>.Success(shipment);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error updating shipment status for barcode {Barcode}", barcode);
+            logger.LogError(ex, "Error updating shipment status for barcode {Barcode}", barcode);
             return ServiceResult<Shipment>.Failure(ex.Message ?? "Unknown error occurred", "UPDATE_ERROR");
         }
     }
@@ -162,15 +153,15 @@ public class ShipmentService : IShipmentService
             shipment.Status = ShipmentStatus.Cancelled;
             shipment.UpdatedAt = DateTime.Now;
 
-            await _repository.UpdateAsync(shipment);
+            await repository.UpdateAsync(shipment);
 
-            _logger.LogInformation("Cancelled shipment {ShipmentId} with barcode {Barcode}",
+            logger.LogInformation("Cancelled shipment {ShipmentId} with barcode {Barcode}",
                 shipment.Id, shipment.Barcode);
             return ServiceResult.Success();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error cancelling shipment with barcode {Barcode}", barcode);
+            logger.LogError(ex, "Error cancelling shipment with barcode {Barcode}", barcode);
             return ServiceResult.Failure(ex.Message ?? "Unknown error occurred", "UPDATE_ERROR");
         }
     }

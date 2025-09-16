@@ -3,18 +3,11 @@ using PostalIdempotencyDemo.Api.Repositories;
 
 namespace PostalIdempotencyDemo.Api.Repositories
 {
-    public class DeliveryRepository : IDeliveryRepository
+    public class DeliveryRepository(Data.ISqlExecutor sqlExecutor) : IDeliveryRepository
     {
-        private readonly Data.ISqlExecutor _sqlExecutor;
-
-        public DeliveryRepository(Data.ISqlExecutor sqlExecutor)
-        {
-            _sqlExecutor = sqlExecutor;
-        }
-
         public async Task<Models.Delivery?> GetDeliveryByBarcodeAsync(string barcode)
         {
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 const string query = @"SELECT TOP 1 id, barcode, employee_id, delivery_date, location_lat, location_lng, recipient_name, status_id, notes, created_at, updated_at FROM deliveries WHERE barcode = @barcode ORDER BY delivery_date DESC";
                 using var command = new Microsoft.Data.SqlClient.SqlCommand(query, connection);
@@ -66,7 +59,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
 
         public async Task<Models.Shipment?> UpdateDeliveryStatusAsync(string barcode, int statusId)
         {
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 // Update status in both deliveries and shipments tables, and update updated_at in shipments
                 const string sqlDeliveries = "UPDATE deliveries SET status_id = @statusId, updated_at = @updatedAt WHERE barcode = @barcode";
@@ -95,7 +88,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
 
         public async Task<Models.Shipment?> GetShipmentByBarcodeAsync(string barcode)
         {
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 const string query = @"
                     SELECT 

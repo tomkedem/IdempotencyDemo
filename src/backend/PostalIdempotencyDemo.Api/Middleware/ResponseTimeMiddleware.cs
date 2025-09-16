@@ -2,17 +2,8 @@ using System.Diagnostics;
 
 namespace PostalIdempotencyDemo.Api.Middleware
 {
-    public class ResponseTimeMiddleware
+    public class ResponseTimeMiddleware(RequestDelegate next, ILogger<ResponseTimeMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ResponseTimeMiddleware> _logger;
-
-        public ResponseTimeMiddleware(RequestDelegate next, ILogger<ResponseTimeMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
         public async Task InvokeAsync(HttpContext context)
         {
             var stopwatch = Stopwatch.StartNew();
@@ -28,7 +19,7 @@ namespace PostalIdempotencyDemo.Api.Middleware
                     context.Response.Headers["X-Response-Time"] = $"{responseTime}ms";
                 }
 
-                _logger.LogDebug("Request {Method} {Path} completed in {ResponseTime}ms",
+                logger.LogDebug("Request {Method} {Path} completed in {ResponseTime}ms",
                     context.Request.Method,
                     context.Request.Path,
                     responseTime);
@@ -36,7 +27,7 @@ namespace PostalIdempotencyDemo.Api.Middleware
                 return Task.CompletedTask;
             });
 
-            await _next(context);
+            await next(context);
         }
     }
 }

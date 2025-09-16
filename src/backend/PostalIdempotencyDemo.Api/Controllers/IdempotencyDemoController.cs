@@ -8,23 +8,15 @@ namespace PostalIdempotencyDemo.Api.Controllers;
 /// קונטרולר לניהול פעולות אידמפוטנטיות במערכת משלוחים
 /// מספק הגנה מפני פעולות כפולות באמצעות Idempotency Keys
 /// </summary>
+/// <remarks>
+/// קונסטרקטור - מאתחל את שירות האורגניזציה
+/// </remarks>
 [ApiController]
 [Route("api/idempotency-demo")]
-public class IdempotencyDemoController : ControllerBase
+public class IdempotencyDemoController(
+    IIdempotencyOrchestrationService orchestrationService,
+    ILogger<IdempotencyDemoController> logger) : ControllerBase
 {
-    private readonly IIdempotencyOrchestrationService _orchestrationService;
-    private readonly ILogger<IdempotencyDemoController> _logger;
-
-    /// <summary>
-    /// קונסטרקטור - מאתחל את שירות האורגניזציה
-    /// </summary>
-    public IdempotencyDemoController(
-        IIdempotencyOrchestrationService orchestrationService,
-        ILogger<IdempotencyDemoController> logger)
-    {
-        _orchestrationService = orchestrationService;
-        _logger = logger;
-    }
 
     /// <summary>
     /// יצירת משלוח חדש עם הגנת אידמפוטנטיות
@@ -45,7 +37,7 @@ public class IdempotencyDemoController : ControllerBase
         
         var requestPath = HttpContext.Request.Path.Value ?? "";
 
-        var result = await _orchestrationService.ProcessCreateDeliveryWithIdempotencyAsync(
+        var result = await orchestrationService.ProcessCreateDeliveryWithIdempotencyAsync(
             request, idempotencyKey, requestPath);
 
         return Ok(result);
@@ -72,7 +64,7 @@ public class IdempotencyDemoController : ControllerBase
         string idempotencyKey = idempotencyKeyValues.First()!;
         string requestPath = HttpContext.Request.Path.Value ?? "";
 
-        IdempotencyDemoResponse<Shipment> result = await _orchestrationService.ProcessUpdateDeliveryStatusWithIdempotencyAsync(
+        IdempotencyDemoResponse<Shipment> result = await orchestrationService.ProcessUpdateDeliveryStatusWithIdempotencyAsync(
             barcode, request, idempotencyKey, requestPath);
 
         return Ok(result);
@@ -84,7 +76,7 @@ public class IdempotencyDemoController : ControllerBase
     [HttpPost("simulate-network-issue")]
     public async Task<IActionResult> SimulateNetworkIssue()
     {
-        _logger.LogInformation("דמיית תקלת רשת...");
+        logger.LogInformation("דמיית תקלת רשת...");
 
         // דחיית קצרה לדמיית זמן עיבוד
         await Task.Delay(500);

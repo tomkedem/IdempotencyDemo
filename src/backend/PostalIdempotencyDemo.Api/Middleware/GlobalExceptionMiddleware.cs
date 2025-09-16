@@ -7,26 +7,17 @@ using System.Threading.Tasks;
 
 namespace PostalIdempotencyDemo.Api.Middleware
 {
-    public class GlobalExceptionMiddleware
+    public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<GlobalExceptionMiddleware> _logger;
-
-        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception occurred");
+                logger.LogError(ex, "Unhandled exception occurred");
 
                 // Only modify response if it hasn't started yet
                 if (!context.Response.HasStarted)
@@ -40,7 +31,7 @@ namespace PostalIdempotencyDemo.Api.Middleware
                 else
                 {
                     // Response has already started, we can't modify it
-                    _logger.LogWarning("Cannot send error response as the response has already started");
+                    logger.LogWarning("Cannot send error response as the response has already started");
                 }
             }
         }

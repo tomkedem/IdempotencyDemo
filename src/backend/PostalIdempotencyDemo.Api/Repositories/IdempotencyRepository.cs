@@ -5,14 +5,8 @@ using PostalIdempotencyDemo.Api.Models;
 
 namespace PostalIdempotencyDemo.Api.Repositories
 {
-    public class IdempotencyRepository : IIdempotencyRepository
+    public class IdempotencyRepository(ISqlExecutor sqlExecutor) : IIdempotencyRepository
     {
-        private readonly ISqlExecutor _sqlExecutor;
-
-        public IdempotencyRepository(ISqlExecutor sqlExecutor)
-        {
-            _sqlExecutor = sqlExecutor;
-        }
 
         // מחזיר את הרשומה האחרונה לפי request_path
         public async Task<IdempotencyEntry?> GetLatestByRequestPathAsync(string requestPath)
@@ -24,7 +18,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
                 WHERE request_path = @requestPath
                 ORDER BY created_at DESC";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@requestPath", requestPath);
@@ -56,7 +50,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
                 FROM idempotency_entries 
                 WHERE idempotency_key = @key AND expires_at > @now";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@key", key);
@@ -89,7 +83,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
                  created_at, expires_at, request_path, operation)
                 VALUES (@key, @hash, @response, @statusCode, @createdAt, @expiresAt, @requestPath, @operation)";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@key", entry.IdempotencyKey);
@@ -114,7 +108,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
                 SET response_body = @response, status_code = @statusCode 
                 WHERE idempotency_key = @key";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@response", responseData);
@@ -130,7 +124,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
         {
             const string sql = "DELETE FROM idempotency_entries WHERE expires_at <= @now";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 using var command = new SqlCommand(sql, connection);
                 command.Parameters.AddWithValue("@now", DateTime.Now);

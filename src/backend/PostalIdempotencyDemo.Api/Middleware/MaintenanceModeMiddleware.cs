@@ -2,24 +2,15 @@ using PostalIdempotencyDemo.Api.Services.Interfaces;
 
 namespace PostalIdempotencyDemo.Api.Middleware
 {
-    public class MaintenanceModeMiddleware
+    public class MaintenanceModeMiddleware(RequestDelegate next, ILogger<MaintenanceModeMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<MaintenanceModeMiddleware> _logger;
-
-        public MaintenanceModeMiddleware(RequestDelegate next, ILogger<MaintenanceModeMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
         public async Task InvokeAsync(HttpContext context, IChaosService chaosService)
         {
             // Skip maintenance check for health check endpoints and settings endpoints
             var path = context.Request.Path.Value?.ToLower();
             if (path != null && (path.Contains("/health") || path.Contains("/chaos/settings")))
             {
-                await _next(context);
+                await next(context);
                 return;
             }
 
@@ -44,7 +35,7 @@ namespace PostalIdempotencyDemo.Api.Middleware
             //     return;
             // }
 
-            await _next(context);
+            await next(context);
         }
     }
 

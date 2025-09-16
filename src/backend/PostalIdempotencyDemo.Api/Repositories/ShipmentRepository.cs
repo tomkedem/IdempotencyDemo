@@ -6,17 +6,8 @@ using PostalIdempotencyDemo.Api.Models;
 namespace PostalIdempotencyDemo.Api.Repositories
 {
 
-    public class ShipmentRepository : IShipmentRepository
+    public class ShipmentRepository(ISqlExecutor sqlExecutor, ILogger<ShipmentRepository> logger) : IShipmentRepository
     {
-        private readonly ISqlExecutor _sqlExecutor;
-        private readonly ILogger<ShipmentRepository> _logger;
-
-        public ShipmentRepository(ISqlExecutor sqlExecutor, ILogger<ShipmentRepository> logger)
-        {
-            _sqlExecutor = sqlExecutor;
-            _logger = logger;
-        }
-
         public async Task<Shipment> CreateAsync(Shipment shipment)
         {
             const string query = @"INSERT INTO shipments (id, barcode, customer_name, address, weight, price, status_id, created_at, notes)
@@ -25,7 +16,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
             shipment.Id = Guid.NewGuid();
             shipment.CreatedAt = DateTime.Now;
 
-            await _sqlExecutor.ExecuteAsync(async connection =>
+            await sqlExecutor.ExecuteAsync(async connection =>
             {
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", shipment.Id);
@@ -51,7 +42,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
                                JOIN shipment_statuses ss ON s.status_id = ss.id
                                WHERE s.barcode = @barcode";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@barcode", barcode);
@@ -73,7 +64,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
                                JOIN shipment_statuses ss ON s.status_id = ss.id
                                WHERE s.id = @id";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", id);
@@ -90,7 +81,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
         public async Task<bool> UpdateStatusAsync(Guid id, ShipmentStatus status)
         {
             const string query = "UPDATE shipments SET status_id = @status_id, updated_at = @updated_at WHERE id = @id";
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@status_id", (int)status);
@@ -105,7 +96,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
         public async Task<bool> ExistsAsync(string barcode)
         {
             const string query = "SELECT COUNT(1) FROM shipments WHERE barcode = @barcode";
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@barcode", barcode);
@@ -123,7 +114,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
                                JOIN shipment_statuses ss ON s.status_id = ss.id
                                ORDER BY s.created_at DESC";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 var shipments = new List<Shipment>();
                 var command = new SqlCommand(query, connection);
@@ -140,7 +131,7 @@ namespace PostalIdempotencyDemo.Api.Repositories
         {
             const string query = @"UPDATE shipments SET barcode = @barcode, customer_name = @customer_name, address = @address, weight = @weight, price = @price, status_id = @status_id, updated_at = @updated_at, notes = @notes WHERE id = @id";
 
-            return await _sqlExecutor.ExecuteAsync(async connection =>
+            return await sqlExecutor.ExecuteAsync(async connection =>
             {
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@id", shipment.Id);

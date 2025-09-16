@@ -3,17 +3,8 @@ using Microsoft.Extensions.Logging;
 
 namespace PostalIdempotencyDemo.Api.Services
 {
-    public class RetryService : IRetryService
+    public class RetryService(IChaosService chaosService, ILogger<RetryService> logger) : IRetryService
     {
-        private readonly IChaosService _chaosService;
-        private readonly ILogger<RetryService> _logger;
-
-        public RetryService(IChaosService chaosService, ILogger<RetryService> logger)
-        {
-            _chaosService = chaosService;
-            _logger = logger;
-        }
-
         public async Task<T> ExecuteWithRetryAsync<T>(Func<Task<T>> operation, string operationName)
         {
             // Using fixed retry count since chaos settings functionality was removed
@@ -25,7 +16,7 @@ namespace PostalIdempotencyDemo.Api.Services
             {
                 try
                 {
-                    _logger.LogDebug("Executing {OperationName}, attempt {Attempt}/{MaxRetries}",
+                    logger.LogDebug("Executing {OperationName}, attempt {Attempt}/{MaxRetries}",
                         operationName, attempt + 1, maxRetries + 1);
 
                     return await operation();
@@ -37,13 +28,13 @@ namespace PostalIdempotencyDemo.Api.Services
 
                     if (attempt > maxRetries)
                     {
-                        _logger.LogError(ex, "Operation {OperationName} failed after {MaxRetries} attempts",
+                        logger.LogError(ex, "Operation {OperationName} failed after {MaxRetries} attempts",
                             operationName, maxRetries + 1);
                         break;
                     }
 
                     var delay = CalculateDelay(attempt);
-                    _logger.LogWarning("Operation {OperationName} failed on attempt {Attempt}, retrying in {Delay}ms. Error: {Error}",
+                    logger.LogWarning("Operation {OperationName} failed on attempt {Attempt}, retrying in {Delay}ms. Error: {Error}",
                         operationName, attempt, delay, ex.Message);
 
                     await Task.Delay(delay);

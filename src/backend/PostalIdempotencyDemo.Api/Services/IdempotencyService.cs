@@ -7,19 +7,8 @@ using PostalIdempotencyDemo.Api.Services.Interfaces;
 
 namespace PostalIdempotencyDemo.Api.Services
 {
-    public class IdempotencyService : IIdempotencyService
+    public class IdempotencyService(IIdempotencyRepository repository, ILogger<IdempotencyService> logger, ISettingsRepository settingsRepository) : IIdempotencyService
     {
-        private readonly IIdempotencyRepository _repository;
-        private readonly ILogger<IdempotencyService> _logger;
-        private readonly ISettingsRepository _settingsRepository;
-
-        public IdempotencyService(IIdempotencyRepository repository, ILogger<IdempotencyService> logger, ISettingsRepository settingsRepository)
-        {
-            _repository = repository;
-            _logger = logger;
-            _settingsRepository = settingsRepository;
-        }
-
         public string GenerateIdempotencyKey(string requestContent)
         {
             using var sha256 = SHA256.Create();
@@ -29,29 +18,29 @@ namespace PostalIdempotencyDemo.Api.Services
 
         public async Task<IdempotencyEntry?> GetIdempotencyEntryAsync(string idempotencyKey)
         {
-            return await _repository.GetByKeyAsync(idempotencyKey);
+            return await repository.GetByKeyAsync(idempotencyKey);
         }
 
         public async Task<bool> StoreIdempotencyEntryAsync(IdempotencyEntry entry)
         {
-            var success = await _repository.CreateAsync(entry);
+            var success = await repository.CreateAsync(entry);
             if (success)
             {
-                _logger.LogInformation("Saved idempotency entry for key {IdempotencyKey}", entry.IdempotencyKey);
+                logger.LogInformation("Saved idempotency entry for key {IdempotencyKey}", entry.IdempotencyKey);
             }
             else
             {
-                _logger.LogError("Failed to save idempotency entry for key {IdempotencyKey}", entry.IdempotencyKey);
+                logger.LogError("Failed to save idempotency entry for key {IdempotencyKey}", entry.IdempotencyKey);
             }
             return success;
         }
 
         public async Task CleanupExpiredEntriesAsync()
         {
-            var success = await _repository.DeleteExpiredAsync();
+            var success = await repository.DeleteExpiredAsync();
             if (success)
             {
-                _logger.LogInformation("Cleaned up expired idempotency entries");
+                logger.LogInformation("Cleaned up expired idempotency entries");
             }
         }
 
@@ -59,18 +48,18 @@ namespace PostalIdempotencyDemo.Api.Services
 
         public async Task CacheResponseAsync(string idempotencyKey, object response)
         {
-            IEnumerable<SystemSetting> settings = await _settingsRepository.GetSettingsAsync();
+            IEnumerable<SystemSetting> settings = await settingsRepository.GetSettingsAsync();
             SystemSetting? useIdempotencySetting = settings.FirstOrDefault(s => s.SettingKey == "UseIdempotencyKey");
             if (idempotencyKey == null || useIdempotencySetting?.SettingValue != "true") return; // Do not cache if disabled
 
             var responseData = JsonSerializer.Serialize(response);
             // StatusCode can be set as needed, here using 200 as default
-            await _repository.UpdateResponseAsync(idempotencyKey, responseData, 200);
+            await repository.UpdateResponseAsync(idempotencyKey, responseData, 200);
         }
 
         public async Task<IdempotencyEntry?> GetLatestEntryByRequestPathAsync(string requestPath)
         {
-            return await _repository.GetLatestByRequestPathAsync(requestPath);
+            return await repository.GetLatestByRequestPathAsync(requestPath);
         }
     }
 }

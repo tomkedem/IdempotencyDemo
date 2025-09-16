@@ -7,16 +7,10 @@ namespace PostalIdempotencyDemo.Api.Repositories
     /// Repository implementation for data cleanup operations
     /// Follows Single Responsibility Principle - handles only cleanup operations
     /// </summary>
-    public class DataCleanupRepository : IDataCleanupRepository
+    public class DataCleanupRepository(ISqlExecutor sqlExecutor, ILogger<DataCleanupRepository> logger) : IDataCleanupRepository
     {
-        private readonly ISqlExecutor _sqlExecutor;
-        private readonly ILogger<DataCleanupRepository> _logger;
-
-        public DataCleanupRepository(ISqlExecutor sqlExecutor, ILogger<DataCleanupRepository> logger)
-        {
-            _sqlExecutor = sqlExecutor ?? throw new ArgumentNullException(nameof(sqlExecutor));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
+        private readonly ISqlExecutor _sqlExecutor = sqlExecutor ?? throw new ArgumentNullException(nameof(sqlExecutor));
+        private readonly ILogger<DataCleanupRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<int> GetIdempotencyEntriesCountAsync()
         {

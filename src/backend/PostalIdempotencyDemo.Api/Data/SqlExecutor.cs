@@ -13,20 +13,11 @@ namespace PostalIdempotencyDemo.Api.Data
         Task ExecuteAsync(Func<SqlConnection, Task> action);
     }
 
-    public class SqlExecutor : ISqlExecutor
+    public class SqlExecutor(IConfiguration configuration, ILogger<SqlExecutor> logger) : ISqlExecutor
     {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<SqlExecutor> _logger;
-
-        public SqlExecutor(IConfiguration configuration, ILogger<SqlExecutor> logger)
-        {
-            _configuration = configuration;
-            _logger = logger;
-        }
-
         public async Task<TResult> ExecuteAsync<TResult>(Func<SqlConnection, Task<TResult>> action)
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             await using var connection = new SqlConnection(connectionString);
             try
             {
@@ -35,7 +26,7 @@ namespace PostalIdempotencyDemo.Api.Data
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "SQL execution error");
+                logger.LogError(ex, "SQL execution error");
                 throw;
             }
             finally
@@ -46,7 +37,7 @@ namespace PostalIdempotencyDemo.Api.Data
 
         public async Task ExecuteAsync(Func<SqlConnection, Task> action)
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             await using var connection = new SqlConnection(connectionString);
             try
             {
@@ -55,7 +46,7 @@ namespace PostalIdempotencyDemo.Api.Data
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "SQL execution error");
+                logger.LogError(ex, "SQL execution error");
                 throw;
             }
             finally
